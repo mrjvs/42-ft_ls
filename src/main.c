@@ -14,9 +14,10 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	t_ftls_context ctx;
 	(void)argc;
 	(void)argv;
 	(void)envp;
-	create_context();
+	init_context(&ctx);
 	return (0);
 }

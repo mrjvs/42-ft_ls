@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	create_context(void)
+#include "context.h"
+
+void	init_context(t_ftls_context *context)
 {
-	return (42);
+	context->ops.show_long = 1;
 }

@@ -5,7 +5,7 @@ Remaking the `ls` command from scratch.<br/>
 
 ## whats included
  - List directory and file information
- - options: `-L`, `-l`, `-a`, `-R`, `-t`, `-u`, `-f`, `-g` & `-d`
+ - options: `-L`, `-r`, `-a`, `-R`, `-t`, `-u`, `-f`, `-g` & `-d`
  - dynamic column sizing (through ENV or terminal)
  - colorized output (through ENV or `-G`)
  - proper handling of ACL and extended attributes

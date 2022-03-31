@@ -20,7 +20,6 @@ enum e_ftls_sort {
 	FTLS_SORT_ACCESSED = 2,
 };
 
-
 /*
 ** ftls options struct, keeps track of options for the runtime.
 ** show_long		if it should display in detailed list form
@@ -30,6 +29,7 @@ enum e_ftls_sort {
 **					of listing the link itself
 ** recursive		if it should scan directories recursively and list them
 ** sort				how the output should be sorted
+** should_reverse	if it should reverse the sorting
 ** only_show_group	if it should ONLY show group in long list format
 ** dir_as_file		if it should treat a dir input argument as a file
 ** columns			how wide the terminal is
@@ -42,21 +42,22 @@ typedef struct s_ftls_options {
 	char				follow_links;
 	char				recursive;
 	enum e_ftls_sort	sort;
+	char				should_reverse;
 	char				only_show_group;
 	char				dir_as_file;
 	int					columns;
-} t_ftls_options;
+}	t_ftls_options;
 
 typedef struct s_ftls_context {
-	t_ftls_options ops;
-} t_ftls_context;
+	t_ftls_options	ops;
+}	t_ftls_context;
 
 /*
-** Create a FTLS context.
+** Initialize a FTLS context.
 ** this is used throughout the entire program and stores all options
 ** that are passed in
 */
 
-int	init_context(void);
+void	init_context(t_ftls_context *context);
 
 #endif
