@@ -14,10 +14,10 @@
 # define CONTEXT_H
 
 enum e_ftls_sort {
-	FTLS_SORT_NONE = 0,
-	FTLS_SORT_LEXIGRAPHICAL = 0,
-	FTLS_SORT_MODIFIED = 1,
-	FTLS_SORT_ACCESSED = 2,
+	FTLS_SORT_NONE,
+	FTLS_SORT_LEXICOGRAPHICAL,
+	FTLS_SORT_MODIFIED,
+	FTLS_SORT_ACCESSED,
 };
 
 /*
@@ -28,7 +28,9 @@ enum e_ftls_sort {
 ** follows_links	if it should follow symbolic links to target instead
 **					of listing the link itself
 ** recursive		if it should scan directories recursively and list them
-** sort				how the output should be sorted
+** should_sort		if sorting is enabled
+** disable_sort		if sorting is disabled (overwrites should_sort)
+** sort_method		how the output should be sorted (use this for checking the sorting)
 ** should_reverse	if it should reverse the sorting
 ** only_show_group	if it should ONLY show group in long list format
 ** dir_as_file		if it should treat a dir input argument as a file
@@ -41,7 +43,9 @@ typedef struct s_ftls_options {
 	char				list_all;
 	char				follow_links;
 	char				recursive;
-	enum e_ftls_sort	sort;
+	char				disable_sort;
+	char				should_sort;
+	enum e_ftls_sort	sort_method;
 	char				should_reverse;
 	char				only_show_group;
 	char				dir_as_file;

@@ -10,15 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef CLI_H
+# define CLI_H
+
 #include "context.h"
-#include "cli.h"
 
-int	main(int argc, char **argv, char **envp)
-{
-	t_ftls_context	ctx;
+int	iter_args(int args_size, char **args, void (*iter)(void *,char), void *param);
+int	handle_argv(int argc, char **argv, t_ftls_context *ctx);
 
-	(void)envp;
-	init_context(&ctx);
-	handle_argv(argc, argv, &ctx);
-	return (0);
-}
+#endif

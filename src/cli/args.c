@@ -10,15 +10,34 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "context.h"
-#include "cli.h"
+#include <stddef.h>
 
-int	main(int argc, char **argv, char **envp)
+/*
+** iterate over input arguments
+** the 'iter' function takes the 'param' parameter as argument
+** and the character of the option
+** 
+** returns amount of arguments iterated over 
+*/
+
+int	iter_args(int args_size, char **args, void (*iter)(void *,char), void *param)
 {
-	t_ftls_context	ctx;
+	int	i;
+	int j;
 
-	(void)envp;
-	init_context(&ctx);
-	handle_argv(argc, argv, &ctx);
-	return (0);
+	i = 0;
+	while (i < args_size)
+	{
+		if (args[i][0] != '-' || args[i][1] == '\0')
+			break;
+		j = 1;
+		while (args[i][j] != '\0')
+		{
+			iter(param, args[i][j]);
+			j++;
+		}
+		i++;
+	}
+
+	return i;
 }

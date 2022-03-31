@@ -20,7 +20,9 @@ HEADERS=\
 	context.h
 SOURCES=\
 	main.c \
-	context/context.c
+	context/context.c \
+	cli/args.c \
+	cli/parse.c
 
 SOURCES_PREFIXED=$(addprefix ./src/, $(SOURCES))
 HEADERS_PREFIXED=$(addprefix ./src/includes/, $(HEADERS))
