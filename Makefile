@@ -1,7 +1,7 @@
 # ************************************************************************** #
 #                                                                            #
 #   Cats are the best!                                          _ |\_        #
-#   And forced headers are stupid                               \` ..\       #
+#   And forced headers are annoying                             \` ..\       #
 #                                                          __,.-" =__Y=      #
 #   By: the cats                                         ."        )         #
 #                                                  _    /   ,    \/\_        #
