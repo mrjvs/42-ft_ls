@@ -14,8 +14,9 @@ Remaking the `ls` command from scratch.<br/>
 ## Development setup
 Run the following to compile, this requires build-essentials to be installed.
 ```
-make -J 9
+make -j 9
 ```
+Then just run it with `ft_ls`
 
 ## FAQ
 
@@ -28,5 +29,5 @@ Do it yourself, I accept PR's
 #### What's the answer to life universe and everything?
 42
 
-## License
-MIT, do whatever you want.
+#### Can I do X and Y with your code?
+It's an MIT license, do whatever you want.

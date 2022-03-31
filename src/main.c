@@ -12,8 +12,11 @@
 
 #include "context.h"
 
-int	main(int argc, char *argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
+	(void)argc;
+	(void)argv;
+	(void)envp;
 	create_context();
 	return (0);
 }
