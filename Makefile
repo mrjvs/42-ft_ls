@@ -1,19 +1,22 @@
 NAME=ft_ls
 CC=gcc
-FLAGS=-Werror -Wall -Wextra
+FLAGS=-Werror -Wall -Wextra -g
 
 INCLUDES=./src/includes
 
 HEADERS=\
-	context.h\
-	bool.h\
-	cli.h
+	context.h \
+	bool.h \
+	cli.h \
+	io.h
 
 SOURCES=\
 	main.c \
 	context/context.c \
 	cli/args.c \
-	cli/parse.c
+	cli/parse.c \
+	io/file.c \
+	io/gather.c
 
 SOURCES_PREFIXED=$(addprefix ./src/, $(SOURCES))
 HEADERS_PREFIXED=$(addprefix ./src/includes/, $(HEADERS))

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "context.h"
 #include "cli.h"
+#include "io.h"
 
 static int	process_option(void *ctx_ptr, char option)
 {
@@ -64,12 +65,9 @@ int			handle_argv(int argc, char **argv, ftls_context *ctx)
 
 	// post processing of arguments
 	post_process_options(ctx);
-	while (argv_pos < argc)
-	{
-		puts(argv[argv_pos]); // TODO temp
-		argv_pos++;
-	}
 
-	// exit program
+	// TODO error handling for gather and print
+	// run gathering and printing section
+	gather_and_print(ctx, argc - argv_pos, argv+argv_pos);
 	return 0;
 }

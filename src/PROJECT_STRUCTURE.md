@@ -12,3 +12,14 @@ The overal flow of the project goes like this:
  - `/io` - Everything about I/O, like retrieving file info
  - `/utils` - Extra utilities
  - `/includes` - Header files
+
+## input parsing
+```
+IF args.len() == 0
+  args[0] = "."
+
+IF args.len() == 1 AND args[0].is_dir()
+  print_dir(args[0])
+ELSE
+  print_multiple(args)
+```
