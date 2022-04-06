@@ -1,22 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*   Cats are the best!                                          _ |\_        */
-/*   And forced headers are annoying                             \` ..\       */
-/*                                                          __,.-" =__Y=      */
-/*   By: the cats                                         ."        )         */
-/*                                                  _    /   ,    \/\_        */
-/*   Created: // :: by                             ((____|    )_-\ \_-`       */
-/*   Updated: // :: by                             `-----'`-----` `--`        */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "context.h"
 
-void	init_context(t_ftls_context *context)
+void	init_context(ftls_context *context)
 {
-	t_ftls_options	*ops;
-
-	ops = &context->ops;
+	ftls_options	*ops = &context->ops;
 	ops->show_long = 1;
 	ops->columns = 25; // TODO temp
 	ops->dir_as_file = 0;

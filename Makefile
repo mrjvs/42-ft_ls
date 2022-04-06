@@ -1,15 +1,3 @@
-# ************************************************************************** #
-#                                                                            #
-#   Cats are the best!                                          _ |\_        #
-#   And forced headers are annoying                             \` ..\       #
-#                                                          __,.-" =__Y=      #
-#   By: the cats                                         ."        )         #
-#                                                  _    /   ,    \/\_        #
-#   Created: // :: by                             ((____|    )_-\ \_-`       #
-#   Updated: // :: by                             `-----'`-----` `--`        #
-#                                                                            #
-# ************************************************************************** #
-
 NAME=ft_ls
 CC=gcc
 FLAGS=-Werror -Wall -Wextra
@@ -17,7 +5,10 @@ FLAGS=-Werror -Wall -Wextra
 INCLUDES=./src/includes
 
 HEADERS=\
-	context.h
+	context.h\
+	bool.h\
+	cli.h
+
 SOURCES=\
 	main.c \
 	context/context.c \
