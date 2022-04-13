@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <dirent.h>
-#include <string.h>
+#include "string.h"
 #include "bool.h"
 #include "io.h"
 #include "path.h"
@@ -11,7 +11,7 @@
 t_bool	gather_directory(ftls_context *ctx, char *path, ftls_dir *out)
 {
 	l_list_init_head(&(out->files));
-	out->name = strdup(path); // TODO strdup
+	out->name = ftls_strdup(path); // TODO strdup
 
 	DIR *folder = opendir(path);
     if (folder == NULL)

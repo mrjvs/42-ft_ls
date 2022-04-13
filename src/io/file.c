@@ -1,7 +1,7 @@
 #include "context.h"
 #include "io.h"
+#include "string.h"
 #include <stdio.h>
-#include <string.h>
 #include <errno.h>
 
 /**
@@ -17,7 +17,7 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 {
 	// set path
 	out->path = path;
-	out->name = name == NULL ? name : strdup(name);
+	out->name = name == NULL ? name : ftls_strdup(name);
 
 	// run stat
 	int stat_ret = 0;
@@ -27,7 +27,6 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 		stat_ret = lstat(out->path, &(out->stat));
 	if (stat_ret == -1) {
 		// TODO temp
-		perror(strerror(errno));
 		return false;
 	}
 
@@ -36,7 +35,7 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	out->is_relative = false;
 	out->is_dotfile = false;
 	if (out->is_dir && name != NULL)
-		out->is_relative = strcmp(name, "..") == 0 || strcmp(name, ".") == 0;
+		out->is_relative = ftls_strcmp(name, "..") == 0 || ftls_strcmp(name, ".") == 0;
 	out->has_sorting_priority = out->is_relative;
 	if (name != NULL)
 		out->is_dotfile = name[0] == '.';

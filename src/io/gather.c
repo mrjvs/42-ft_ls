@@ -1,7 +1,7 @@
 #include "context.h"
 #include "io.h"
 #include "printing.h"
-#include <string.h>
+#include "string.h"
 
 /**
  * Gather file information from cli inputs
@@ -15,9 +15,9 @@ int	gather_and_print(ftls_context *ctx, int argc, char **argv)
 	char *first_arg = NULL;
 	t_bool has_one_arg = argc <= 1;
 	if (argc < 1)
-		first_arg = strdup(".");
+		first_arg = ftls_strdup(".");
 	else if (argc == 1)
-		first_arg = strdup(argv[0]);
+		first_arg = ftls_strdup(argv[0]);
 
 	// if only one argument and its a directory
 	if (has_one_arg)
@@ -31,7 +31,7 @@ int	gather_and_print(ftls_context *ctx, int argc, char **argv)
 			ftls_dir dir;
 			gather_directory(ctx, first_arg, &dir);
 
-			ftls_print_options print_options = { .show_prefix = false, .display_full = true, .hide_dirs = false, .recurse = 0 };
+			ftls_print_options print_options = { .show_prefix = false, .display_full = true, .force_compose = false, .recurse = 0 };
 			print_directory(ctx, &dir, print_options);
 
 			return true;
@@ -41,7 +41,7 @@ int	gather_and_print(ftls_context *ctx, int argc, char **argv)
 	// treat as list of files and directories
 	ftls_dir dir;
 	gather_composed_directory(ctx, argc, argv, &dir);
-	ftls_print_options print_options = { .show_prefix = false, .display_full = false, .hide_dirs = true, .recurse = 1 };
+	ftls_print_options print_options = { .show_prefix = false, .display_full = false, .force_compose = true, .recurse = 1 };
 	print_directory(ctx, &dir, print_options);
 
 	return true;
