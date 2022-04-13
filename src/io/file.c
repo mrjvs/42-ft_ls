@@ -1,5 +1,8 @@
 #include "context.h"
 #include "io.h"
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
 
 /**
  * retrieve file information from a path
@@ -10,10 +13,11 @@
  * it returns truthy if successful
  * errno is set on error
  */
-t_bool retrieve_file_info(ftls_context *ctx, char *path, ftls_file_info *out)
+t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_info *out)
 {
 	// set path
 	out->path = path;
+	out->name = name == NULL ? name : strdup(name);
 
 	// run stat
 	int stat_ret = 0;
@@ -21,10 +25,16 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, ftls_file_info *out)
 		stat_ret = stat(out->path, &(out->stat));
 	else
 		stat_ret = lstat(out->path, &(out->stat));
-	if (stat_ret == -1)
+	if (stat_ret == -1) {
+		// TODO temp
+		perror(strerror(errno));
 		return false;
-	
+	}
+
 	// set other properties
 	out->is_dir = S_ISDIR(out->stat.st_mode);
+	out->is_relative = false;
+	if (out->is_dir && name != NULL)
+		out->is_relative = strcmp(name, "..") == 0 || strcmp(name, ".") == 0;
 	return true;
 }

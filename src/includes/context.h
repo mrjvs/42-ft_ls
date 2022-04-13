@@ -30,6 +30,7 @@ typedef struct s_ftls_options {
 
 typedef struct s_ftls_context {
 	ftls_options	ops;
+	t_bool			has_printed;
 }	ftls_context;
 
 /**

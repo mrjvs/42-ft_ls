@@ -1,3 +1,6 @@
+#ifndef FTLS_LIST
+#define FTLS_LIST
+
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -32,9 +35,6 @@ typedef struct			s_l_list {
  */
 #define	get_list_head(entry) entry ? &(entry->head) : 0
 
-void	free_l_list(l_list *lst, void (*del)(l_list *head));
-void	free_dl_list(dl_list *lst, void (*del)(dl_list *head));
-
 l_list	*l_list_first(l_list *lst);
 dl_list	*dl_list_first(dl_list *lst);
 
@@ -49,3 +49,8 @@ void	dl_list_push_front(dl_list *lst, dl_list *node);
 
 void	l_list_push_after(l_list *node, l_list *new_node);
 void	dl_list_push_after(dl_list *node, dl_list *new_node);
+
+void	l_list_init_head(l_list *head);
+void	dl_list_init_head(dl_list *head);
+
+#endif

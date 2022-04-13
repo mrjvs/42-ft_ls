@@ -1,38 +1,6 @@
 #include "list.h"
 
 /**
- * Free a linked list
- * the del argument is a function that receives a list head to free the container from
- */
-void	free_l_list(l_list *lst, void (*del)(l_list *head))
-{
-	lst = lst->next;
-	l_list *next;
-	while (lst != NULL)
-	{
-		next = lst->next;
-		del(lst);
-		lst = next;
-	}
-}
-
-/**
- * Free a double linked list
- * the del argument is a function that receives a list head to free the container from
- */
-void	free_dl_list(dl_list *lst, void (*del)(dl_list *head))
-{
-	lst = lst->next;
-	dl_list *next;
-	while (lst != NULL)
-	{
-		next = lst->next;
-		del(lst);
-		lst = next;
-	}
-}
-
-/**
  * Get first node from linked list
  */
 l_list	*l_list_first(l_list *lst)
@@ -91,7 +59,8 @@ void	dl_list_push_back(dl_list *lst, dl_list *node)
  */
 void	l_list_push_front(l_list *lst, l_list *node)
 {
-	node->next = lst;
+	node->next = lst->next;
+	lst->next = node;
 }
 
 /**
@@ -99,9 +68,10 @@ void	l_list_push_front(l_list *lst, l_list *node)
  */
 void	dl_list_push_front(dl_list *lst, dl_list *node)
 {
-	node->next = lst;
+	node->next = lst->next;
+	node->next->prev = node;
 	node->prev = NULL;
-	lst->prev = node;
+	lst->next = node;
 }
 
 /**
@@ -123,4 +93,21 @@ void	dl_list_push_after(dl_list *node, dl_list *new_node)
 
 	if (new_node->next) new_node->next->prev = new_node;
 	node->next = new_node; 
+}
+
+/**
+ * initialize the head of a linked list
+*/
+void	l_list_init_head(l_list *head)
+{
+	head->next = NULL;
+}
+
+/**
+ * initialize the head of a double linked list
+*/
+void	dl_list_init_head(dl_list *head)
+{
+	head->next = NULL;
+	head->prev = NULL;
 }

@@ -15,4 +15,6 @@ void	init_context(ftls_context *context)
 	ops->disable_sort = 0;
 	ops->should_sort = 0;
 	ops->sort_method = FTLS_SORT_MODIFIED;
+	
+	context->has_printed = 0;
 }
