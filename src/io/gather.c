@@ -26,7 +26,11 @@ int	gather_and_print(ftls_context *ctx, int argc, char **argv)
 			return false; // TODO add error handling
 		if (file.is_dir)
 		{
+			ftls_dir dir;
+			gather_directory(ctx, first_arg, &dir);
+			// TODO handle errors
 			// gather_directory(first_arg);
+
 			// print_directory(prefix = false, full = true, hide_directories = false, recurse = 0);
 			return true;
 		}
@@ -36,4 +40,12 @@ int	gather_and_print(ftls_context *ctx, int argc, char **argv)
 	// gather_composed_directory(argv);
 	// print_directory(prefix = false, full = false, hide_directories = true, recurse = 1)
 	return true;
+}
+
+
+{
+	int i;
+	struct list {
+		struct list *next;
+	}
 }
