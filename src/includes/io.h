@@ -14,6 +14,8 @@ typedef struct s_ftls_file_info {
 	char		*name;
 	t_bool		is_dir;
 	t_bool		is_relative;
+	t_bool		has_sorting_priority;
+	t_bool		is_dotfile;
 } ftls_file_info;
 
 struct s_ftls_dir_entry {

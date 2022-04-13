@@ -5,6 +5,8 @@
 #include "context.h"
 #include "io.h"
 
+#define should_print_file(ctx, file) (!file.is_dotfile || ctx->ops.list_all)
+
 typedef struct s_ftls_print_options {
 	t_bool	show_prefix;	// show prefix of directory
 	t_bool	display_full;	// ??

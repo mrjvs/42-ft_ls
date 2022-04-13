@@ -21,7 +21,7 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 	{
 		ftls_file_info file = get_list_data(lst, struct s_ftls_dir_entry)->file;
 
-		if (file.is_dir && ops.hide_dirs)
+		if ((file.is_dir && ops.hide_dirs) || !should_print_file(ctx, file))
 			continue;
 
 		ctx->has_printed = true;
@@ -42,8 +42,8 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 	{
 		ftls_file_info file = get_list_data(lst, struct s_ftls_dir_entry)->file;
 
-		// only handle files && non-relative directories
-		if (!file.is_dir || (file.is_relative && !dont_skip_relative))
+		// only handle files && non-relative directories (unless forced) && it should print
+		if (!file.is_dir || (file.is_relative && !dont_skip_relative) || !should_print_file(ctx, file))
 			continue;
 
 		// gather and print directory

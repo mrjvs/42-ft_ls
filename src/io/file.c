@@ -34,7 +34,11 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	// set other properties
 	out->is_dir = S_ISDIR(out->stat.st_mode);
 	out->is_relative = false;
+	out->is_dotfile = false;
 	if (out->is_dir && name != NULL)
 		out->is_relative = strcmp(name, "..") == 0 || strcmp(name, ".") == 0;
+	out->has_sorting_priority = out->is_relative;
+	if (name != NULL)
+		out->is_dotfile = name[0] == '.';
 	return true;
 }
