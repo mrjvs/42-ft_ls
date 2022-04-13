@@ -7,10 +7,10 @@ The overal flow of the project goes like this:
 4. the information is printed
 
 ## directories
- - `/cli` - Everything about parsing inputs
- - `/printing` - Everything about outputing/printing
- - `/io` - Everything about I/O, like retrieving file info
- - `/utils` - Extra utilities
+ - `/cli` - Everything about parsing inputs
+ - `/printing` - Everything about outputing/printing
+ - `/io` - Everything about I/O, like retrieving file info
+ - `/utils` - Extra utilities
  - `/includes` - Header files
 
 ## input parsing
