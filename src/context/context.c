@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include "context.h"
 
 void	init_context(ftls_context *context)
@@ -17,4 +18,5 @@ void	init_context(ftls_context *context)
 	ops->sort_method = FTLS_SORT_MODIFIED;
 	
 	context->has_printed = 0;
+	context->executable = NULL;
 }

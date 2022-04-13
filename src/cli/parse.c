@@ -42,13 +42,14 @@ static void	post_process_options(ftls_context *ctx)
 
 static void process_invalid_args(int err)
 {
+	// TODO better error handling
 	if (err == -1)
 		puts("Unknown option passed in.");
 	else
 		puts("Unhandled argument parsing error");
 }
 
-int			handle_argv(int argc, char **argv, ftls_context *ctx)
+t_bool		handle_argv(int argc, char **argv, ftls_context *ctx)
 {
 	int argv_pos = 1;
 
@@ -60,14 +61,13 @@ int			handle_argv(int argc, char **argv, ftls_context *ctx)
 	if (args_ret < 0)
 	{
 		process_invalid_args(args_ret);
-		return 1;
+		return false;
 	}
 
 	// post processing of arguments
 	post_process_options(ctx);
 
-	// TODO error handling for gather and print
 	// run gathering and printing section
 	gather_and_print(ctx, argc - argv_pos, argv+argv_pos);
-	return 0;
+	return true;
 }

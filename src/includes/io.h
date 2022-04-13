@@ -32,6 +32,6 @@ t_bool	gather_directory(ftls_context *ctx, char *path, ftls_dir *out);
 t_bool	gather_composed_directory(ftls_context *ctx, int argc, char **argv, ftls_dir *out);
 
 t_bool	retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_info *out);
-int		gather_and_print(ftls_context *ctx, int argc, char **argv);
+t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv);
 
 #endif

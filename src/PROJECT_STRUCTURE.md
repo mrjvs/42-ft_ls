@@ -5,6 +5,7 @@ The overal flow of the project goes like this:
 2. all information is retrieved
 3. information is sorted and parsed
 4. the information is printed
+5. if recursive, back to step 2 with new information
 
 ## directories
  - `/cli` - Everything about parsing inputs

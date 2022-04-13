@@ -9,7 +9,7 @@
  * 
  * returns true is success
  */
-int	gather_and_print(ftls_context *ctx, int argc, char **argv)
+t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 {
 	// TODO temp strdup + no error handling + memleak
 	char *first_arg = NULL;
@@ -18,21 +18,30 @@ int	gather_and_print(ftls_context *ctx, int argc, char **argv)
 		first_arg = ftls_strdup(".");
 	else if (argc == 1)
 		first_arg = ftls_strdup(argv[0]);
+	if (has_one_arg && !first_arg) {
+		print_error(ctx);
+		return false;
+	}
 
 	// if only one argument and its a directory
 	if (has_one_arg)
 	{
 		ftls_file_info file;
-		if (!retrieve_file_info(ctx, first_arg, NULL, &file))
-			return false; // TODO add error handling
+		if (!retrieve_file_info(ctx, first_arg, NULL, &file)) {
+			print_access_error(first_arg);
+			return false;
+		}
 		if (file.is_dir)
 		{
 			// TODO handle errors
 			ftls_dir dir;
-			gather_directory(ctx, first_arg, &dir);
+			if (!gather_directory(ctx, first_arg, &dir)) {
+				print_access_error(first_arg);
+				return false;
+			}
 
 			ftls_print_options print_options = { .show_prefix = false, .display_full = true, .force_compose = false, .recurse = 0 };
-			print_directory(ctx, &dir, print_options);
+			print_directory(ctx, &dir, print_options); // TODO handle errors
 
 			return true;
 		}
@@ -42,7 +51,7 @@ int	gather_and_print(ftls_context *ctx, int argc, char **argv)
 	ftls_dir dir;
 	gather_composed_directory(ctx, argc, argv, &dir);
 	ftls_print_options print_options = { .show_prefix = false, .display_full = false, .force_compose = true, .recurse = 1 };
-	print_directory(ctx, &dir, print_options);
+	print_directory(ctx, &dir, print_options); // TODO handle errors
 
 	return true;
 }

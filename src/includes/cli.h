@@ -3,7 +3,7 @@
 
 #include "context.h"
 
-int	iter_args(int args_size, char **args, int (*iter)(void *,char), void *param);
-int	handle_argv(int argc, char **argv, ftls_context *ctx);
+int		iter_args(int args_size, char **args, int (*iter)(void *,char), void *param);
+t_bool	handle_argv(int argc, char **argv, ftls_context *ctx);
 
 #endif
