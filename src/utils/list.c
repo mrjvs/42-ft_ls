@@ -6,6 +6,7 @@
  */
 void	free_l_list(l_list *lst, void (*del)(l_list *head))
 {
+	lst = lst->next;
 	l_list *next;
 	while (lst != NULL)
 	{
@@ -21,6 +22,7 @@ void	free_l_list(l_list *lst, void (*del)(l_list *head))
  */
 void	free_dl_list(dl_list *lst, void (*del)(dl_list *head))
 {
+	lst = lst->next;
 	dl_list *next;
 	while (lst != NULL)
 	{
@@ -35,7 +37,7 @@ void	free_dl_list(dl_list *lst, void (*del)(dl_list *head))
  */
 l_list	*l_list_first(l_list *lst)
 {
-	return lst;
+	return lst->next;
 }
 
 /**

@@ -41,11 +41,3 @@ int	gather_and_print(ftls_context *ctx, int argc, char **argv)
 	// print_directory(prefix = false, full = false, hide_directories = true, recurse = 1)
 	return true;
 }
-
-
-{
-	int i;
-	struct list {
-		struct list *next;
-	}
-}
