@@ -8,7 +8,8 @@ HEADERS=\
 	context.h \
 	bool.h \
 	cli.h \
-	io.h
+	io.h \
+	list.h
 
 SOURCES=\
 	main.c \
@@ -16,7 +17,9 @@ SOURCES=\
 	cli/args.c \
 	cli/parse.c \
 	io/file.c \
-	io/gather.c
+	io/gather.c \
+	io/directory.c \
+	utils/list.c
 
 SOURCES_PREFIXED=$(addprefix ./src/, $(SOURCES))
 HEADERS_PREFIXED=$(addprefix ./src/includes/, $(HEADERS))
