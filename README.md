@@ -11,13 +11,19 @@ Remaking the `ls` command from scratch.<br/>
  - proper handling of ACL and extended attributes
  - another option: `--hi`
 
+## functions used from standard library
+ - memory functions: `malloc`, `free`
+ - dir and file functions: `opendir`, `closedir`, `readdir`, `stat`, `lstat`
+ - IO functions: `write`
+ - error functions: `strerror`
+
 ## Development setup
 Run the following to compile, this requires build-essentials to be installed.
 ```sh
 # dont have 9 cores? run it without `-j 9`
 make -j 9
 ```
-Then just run it with `ft_ls`
+Then just run it with `./ft_ls`
 
 ## FAQ
 
