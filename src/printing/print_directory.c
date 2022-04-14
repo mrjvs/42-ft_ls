@@ -31,10 +31,8 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 		{
 			ftls_file_info file = get_list_data(lst, struct s_ftls_dir_entry)->file;
 
-			if (should_print_file(ctx, &file)) {
-				printf("-> %li %li\n", file.stat.st_blksize, file.stat.st_blocks);
+			if (should_print_file(ctx, &file))
 				blocks += file.stat.st_blocks / 2; // stat gives 512 blocks, we need to display 1024 blocks
-			}
 		}
 		printf("total %li\n", blocks);
 	}

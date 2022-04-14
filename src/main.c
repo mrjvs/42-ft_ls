@@ -5,7 +5,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	ftls_context	ctx;
 
-	(void)envp;
+	ctx.envp = envp;
 	init_context(&ctx);
 	ctx.executable = argv[0];
 	handle_argv(argc, argv, &ctx);

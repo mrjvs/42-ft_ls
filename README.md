@@ -14,7 +14,7 @@ Remaking the `ls` command from scratch.<br/>
 ## functions used from standard library
  - memory functions: `malloc`, `free`
  - dir and file functions: `opendir`, `closedir`, `readdir`, `stat`, `lstat`
- - IO functions: `write`
+ - IO functions: `write`, `isatty`, `ioctl` (for terminal width)
  - error functions: `strerror`
 
 ## features considered out of scope

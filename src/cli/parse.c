@@ -39,10 +39,14 @@ static int	process_option(void *ctx_ptr, char option)
 
 static void	post_process_options(ftls_context *ctx)
 {
+	if (ctx->ops.show_long && ctx->ops.sort_method == FTLS_SORT_ACCESSED)
+		ctx->ops.show_access_date = true;
 	if (!ctx->ops.should_sort)
 		ctx->ops.sort_method = FTLS_SORT_LEXICOGRAPHICAL;
 	if (ctx->ops.disable_sort)
 		ctx->ops.sort_method = FTLS_SORT_NONE;
+	if (ctx->ops.show_long)
+		ctx->ops.fetch_details = true;
 }
 
 static void process_invalid_args(ftls_context *ctx, int err)

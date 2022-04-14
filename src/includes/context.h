@@ -27,6 +27,9 @@ typedef struct s_ftls_options {
 	t_bool	dir_as_file;			// if it should treat a dir input argument as a file
 	int		columns; 				// how wide the terminal is
 	char	invalid;				// set if invalid option is passed in, this is the invalid option
+	t_bool	show_as_columns;		// if it should show with rows or only as columns
+	t_bool	show_access_date;		// show access date instead of modified date
+	t_bool	fetch_details;			// if it should fetch details
 }	ftls_options;
 
 typedef struct s_ftls_context {
@@ -34,6 +37,8 @@ typedef struct s_ftls_context {
 	t_bool			has_printed;
 	t_bool			major_error;
 	t_bool			error;
+	char			*colors;		// colors used for printing
+	char			**envp;			// pointer to environment variables
 	char			*executable;	// name of executable thats being used
 }	ftls_context;
 
