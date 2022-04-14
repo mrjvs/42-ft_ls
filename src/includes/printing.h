@@ -15,7 +15,7 @@ typedef struct s_ftls_print_options {
 }	ftls_print_options;
 
 void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops);
-void	print_access_error(char *path);
+void	print_access_error(ftls_context *ctx, char *path);
 void	print_error(ftls_context *ctx);
 
 #endif

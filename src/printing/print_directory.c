@@ -48,10 +48,15 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 
 		// gather and print directory
 		ftls_dir dir;
-		gather_directory(ctx, file.path, &dir);
+		if (!gather_directory(ctx, file.path, &dir)) {
+			if (force_compose)
+				ctx->major_error = true; // its only a major error if it fails on recurse
+			continue;
+		}
 		if (ctx->has_printed)
 			printf("\n");
 		ctx->has_printed = true;
 		print_directory(ctx, &dir, ops);
+		free_directory(&dir);
 	}
 }

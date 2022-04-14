@@ -61,6 +61,7 @@ t_bool		handle_argv(int argc, char **argv, ftls_context *ctx)
 	if (args_ret < 0)
 	{
 		process_invalid_args(args_ret);
+		ctx->major_error = true;
 		return false;
 	}
 

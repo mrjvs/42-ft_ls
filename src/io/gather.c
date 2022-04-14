@@ -7,11 +7,10 @@
  * Gather file information from cli inputs
  * then print them the same way LS prints and according to context
  * 
- * returns true is success
+ * returns true if success
  */
 t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 {
-	// TODO temp strdup + no error handling + memleak
 	char *first_arg = NULL;
 	t_bool has_one_arg = argc <= 1;
 	if (argc < 1)
@@ -20,6 +19,7 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 		first_arg = ftls_strdup(argv[0]);
 	if (has_one_arg && !first_arg) {
 		print_error(ctx);
+		ctx->major_error = true;
 		return false;
 	}
 
@@ -28,30 +28,37 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 	{
 		ftls_file_info file;
 		if (!retrieve_file_info(ctx, first_arg, NULL, &file)) {
-			print_access_error(first_arg);
+			ctx->major_error = true;
+			print_access_error(ctx, first_arg);
+			free(first_arg);
 			return false;
 		}
-		if (file.is_dir)
+		t_bool is_dir = file.is_dir;
+		free_file_info(&file);
+		if (is_dir)
 		{
-			// TODO handle errors
 			ftls_dir dir;
 			if (!gather_directory(ctx, first_arg, &dir)) {
-				print_access_error(first_arg);
+				ctx->major_error = true;
+				print_access_error(ctx, first_arg);
+				free(first_arg);
 				return false;
 			}
 
 			ftls_print_options print_options = { .show_prefix = false, .display_full = true, .force_compose = false, .recurse = 0 };
-			print_directory(ctx, &dir, print_options); // TODO handle errors
-
+			print_directory(ctx, &dir, print_options);
+			free_directory(&dir);
+			free(first_arg);
 			return true;
 		}
+		free(first_arg);
 	}
 
 	// treat as list of files and directories
 	ftls_dir dir;
 	gather_composed_directory(ctx, argc, argv, &dir);
 	ftls_print_options print_options = { .show_prefix = false, .display_full = false, .force_compose = true, .recurse = 1 };
-	print_directory(ctx, &dir, print_options); // TODO handle errors
-
+	print_directory(ctx, &dir, print_options);
+	free_directory(&dir);
 	return true;
 }

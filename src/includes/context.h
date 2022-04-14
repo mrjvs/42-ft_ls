@@ -31,6 +31,8 @@ typedef struct s_ftls_options {
 typedef struct s_ftls_context {
 	ftls_options	ops;
 	t_bool			has_printed;
+	t_bool			major_error;
+	t_bool			error;
 	char			*executable;	// name of executable thats being used
 }	ftls_context;
 

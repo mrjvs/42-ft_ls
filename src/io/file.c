@@ -15,9 +15,18 @@
  */
 t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_info *out)
 {
-	// set path
-	out->path = path;
-	out->name = name == NULL ? name : ftls_strdup(name);
+	// set path & name
+	out->path = ftls_strdup(path);
+	if (!out->path)
+		return false;
+	out->name = NULL;
+	if (name) {
+		out->name = ftls_strdup(name);
+		if (!out->name) {
+			free(out->path);
+			return false;
+		}
+	}
 
 	// run stat
 	int stat_ret = 0;
@@ -26,7 +35,8 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	else
 		stat_ret = lstat(out->path, &(out->stat));
 	if (stat_ret == -1) {
-		// TODO temp
+		free(out->name);
+		free(out->path);
 		return false;
 	}
 
@@ -40,4 +50,14 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	if (name != NULL)
 		out->is_dotfile = name[0] == '.';
 	return true;
+}
+
+/**
+ * Free a ftls_file_info struct
+*/
+void	free_file_info(ftls_file_info *file) {
+	if (!file)
+		return;
+	free(file->path);
+	free(file->name);
 }
