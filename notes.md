@@ -3,7 +3,7 @@ Todo:
  - [X] make sure of no leaks
  - [X] Error handling
  - [X] Sorting
- - [ ] get rid of atoi
+ - [ ] get rid of atoi & printfs
  - [ ] ask harm about sorting lexicographical
  - [ ] Printing
 

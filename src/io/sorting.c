@@ -71,7 +71,6 @@ static int	compare_files(ftls_context *ctx, ftls_file_info *a, ftls_file_info *b
 			return -1;
 		if (b->has_sorting_priority && !a->has_sorting_priority)
 			return 1;
-		// TODO default to alphabetical sort
 		return ftls_strcoll(a->name, b->name);
 	}
 	
