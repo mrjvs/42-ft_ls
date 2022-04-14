@@ -44,6 +44,7 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 				free(first_arg);
 				return false;
 			}
+			sort_directory(ctx, &dir);
 
 			ftls_print_options print_options = { .show_prefix = false, .display_full = true, .force_compose = false, .recurse = 0 };
 			print_directory(ctx, &dir, print_options);
@@ -57,6 +58,7 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 	// treat as list of files and directories
 	ftls_dir dir;
 	gather_composed_directory(ctx, argc, argv, &dir);
+	sort_directory(ctx, &dir);
 	ftls_print_options print_options = { .show_prefix = false, .display_full = false, .force_compose = true, .recurse = 1 };
 	print_directory(ctx, &dir, print_options);
 	free_directory(&dir);

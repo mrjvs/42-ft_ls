@@ -17,6 +17,10 @@ Remaking the `ls` command from scratch.<br/>
  - IO functions: `write`
  - error functions: `strerror`
 
+## features considered out of scope
+ - other locales, only "en_US" is supported
+ - perfect `ls` sorting, only the alphabet and numbers are identically sorted
+
 ## Development setup
 Run the following to compile, this requires build-essentials to be installed.
 ```sh

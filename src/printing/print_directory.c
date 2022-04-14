@@ -4,6 +4,14 @@
 #include "io.h"
 #include "printing.h"
 
+static inline int	should_print_file(ftls_context *ctx, ftls_file_info *file) {
+	if (ctx->ops.list_all)
+		return 1;
+	if (file->is_dotfile)
+		return 0;
+	return 1;
+}
+
 /**
  * print directories, in case of recursive. gather and then print after printing main deal
 */
@@ -21,7 +29,7 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 	{
 		ftls_file_info file = get_list_data(lst, struct s_ftls_dir_entry)->file;
 
-		if ((file.is_dir && ops.force_compose) || !should_print_file(ctx, file))
+		if ((file.is_dir && ops.force_compose) || !should_print_file(ctx, &file))
 			continue;
 
 		ctx->has_printed = true;
@@ -43,7 +51,7 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 		ftls_file_info file = get_list_data(lst, struct s_ftls_dir_entry)->file;
 
 		// only handle files && non-relative directories (unless forced) && it should only print hidden files if forced
-		if (!file.is_dir || (file.is_relative && !force_compose) || (!force_compose && !should_print_file(ctx, file)))
+		if (!file.is_dir || (file.is_relative && !force_compose) || (!force_compose && !should_print_file(ctx, &file)))
 			continue;
 
 		// gather and print directory

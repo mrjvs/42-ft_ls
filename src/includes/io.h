@@ -37,4 +37,6 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv);
 void	free_file_info(ftls_file_info *file);
 void	free_directory(ftls_dir *dir);
 
+void	sort_directory(ftls_context *ctx, ftls_dir *dir);
+
 #endif

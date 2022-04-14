@@ -4,7 +4,7 @@
 void	init_context(ftls_context *context)
 {
 	ftls_options	*ops = &context->ops;
-	ops->show_long = 1;
+	ops->show_long = 0;
 	ops->columns = 25; // TODO temp
 	ops->dir_as_file = 0;
 	ops->follow_links = 0;
