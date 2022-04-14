@@ -1,7 +1,7 @@
 #include "context.h"
 #include "io.h"
 #include "printing.h"
-#include "string.h"
+#include "ftls_string.h"
 
 /**
  * Gather file information from cli inputs
@@ -18,7 +18,7 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 	else if (argc == 1)
 		first_arg = ftls_strdup(argv[0]);
 	if (has_one_arg && !first_arg) {
-		print_error(ctx);
+		print_errno(ctx);
 		ctx->major_error = true;
 		return false;
 	}
@@ -40,7 +40,7 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 			ftls_dir dir;
 			if (!gather_directory(ctx, first_arg, &dir)) {
 				ctx->major_error = true;
-				print_access_error(ctx, first_arg);
+				print_directory_error(ctx, first_arg);
 				free(first_arg);
 				return false;
 			}

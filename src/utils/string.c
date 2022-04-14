@@ -1,6 +1,7 @@
-#include "string.h"
+#include "ftls_string.h"
 #include <stddef.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 /**
  * Duplicate string
@@ -84,4 +85,25 @@ int		ftls_strcmp(const char *one, const char *two)
 			return 0;
 		i++;
 	}
+}
+
+/**
+ * Write a string to STDOUT
+*/
+ssize_t	ftls_write(const char *str)
+{
+	return write(STDOUT_FILENO, str, ftls_strlen(str));
+}
+
+/**
+ * Write a string to STDOUT and add a newline
+*/
+ssize_t	ftls_puts(const char *str)
+{
+	ssize_t out = ftls_write(str);
+	if (out == -1)
+		return -1;
+	if (ftls_write("\n") == -1)
+		return -1;
+	return out + 1;
 }

@@ -26,6 +26,7 @@ typedef struct s_ftls_options {
 	t_bool	only_show_group;		// if it should ONLY show group (and not owner) in long list format
 	t_bool	dir_as_file;			// if it should treat a dir input argument as a file
 	int		columns; 				// how wide the terminal is
+	char	invalid;				// set if invalid option is passed in, this is the invalid option
 }	ftls_options;
 
 typedef struct s_ftls_context {

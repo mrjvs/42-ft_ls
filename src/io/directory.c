@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <dirent.h>
 #include "list.h"
-#include "string.h"
+#include "ftls_string.h"
 #include "bool.h"
 #include "io.h"
 #include "path.h"
@@ -57,7 +57,7 @@ t_bool	gather_composed_directory(ftls_context *ctx, int argc, char **argv, ftls_
 		if (!list_entry || !retrieve_file_info(ctx, argv[i], argv[i], &(list_entry->file)))
 		{
 			ctx->major_error = true;
-			print_access_error(ctx, argv[1]);
+			print_access_error(ctx, argv[i]);
 			free(list_entry);
 			continue;
 		}

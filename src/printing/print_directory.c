@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <string.h>
+#include <ftls_string.h>
 #include "context.h"
 #include "io.h"
 #include "printing.h"

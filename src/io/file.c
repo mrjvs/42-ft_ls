@@ -1,6 +1,6 @@
 #include "context.h"
 #include "io.h"
-#include "string.h"
+#include "ftls_string.h"
 #include <stdio.h>
 #include <errno.h>
 

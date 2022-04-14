@@ -1,6 +1,6 @@
 #include <stddef.h>
 #include <stdlib.h>
-#include "string.h"
+#include "ftls_string.h"
 
 /**
  * Join two linux paths, will account for seperators.

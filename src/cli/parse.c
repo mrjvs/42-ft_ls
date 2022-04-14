@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "context.h"
 #include "cli.h"
+#include "ftls_string.h"
 #include "io.h"
+#include "printing.h"
 
 static int	process_option(void *ctx_ptr, char option)
 {
@@ -28,7 +30,10 @@ static int	process_option(void *ctx_ptr, char option)
 	else if (option == 'd')
 		ctx->ops.dir_as_file = 1;
 	else
+	{
+		ctx->ops.invalid = option;
 		return -1;
+	}
 	return 0;
 }
 
@@ -40,13 +45,22 @@ static void	post_process_options(ftls_context *ctx)
 		ctx->ops.sort_method = FTLS_SORT_NONE;
 }
 
-static void process_invalid_args(int err)
+static void process_invalid_args(ftls_context *ctx, int err)
 {
-	// TODO better error handling
 	if (err == -1)
-		puts("Unknown option passed in.");
-	else
-		puts("Unhandled argument parsing error");
+	{
+		char *str = ftls_strdup("invalid option -- 'X'");
+		if (!str) {
+			print_errno(ctx);
+			return;
+		}
+		str[19] = ctx->ops.invalid;
+		print_error(ctx, str);
+		free(str);
+		return;
+	}
+	
+	print_error(ctx, "unhandled error occured while parsing arguments");
 }
 
 t_bool		handle_argv(int argc, char **argv, ftls_context *ctx)
@@ -60,7 +74,7 @@ t_bool		handle_argv(int argc, char **argv, ftls_context *ctx)
 	// handle errors for argument parsing
 	if (args_ret < 0)
 	{
-		process_invalid_args(args_ret);
+		process_invalid_args(ctx, args_ret);
 		ctx->major_error = true;
 		return false;
 	}
