@@ -12,15 +12,15 @@
 */
 void	print_path_error(ftls_context *ctx, const char *path, const char *msg)
 {
-	 // TODO stderr
 	ctx->error = true;
-	ftls_write(ctx->executable);
-	ftls_write(": ");
-	ftls_write(msg);
-	ftls_write(" '");
-	ftls_write(path);
-	ftls_write("': ");
-	ftls_puts(strerror(errno));
+	int fd = STDERR_FILENO;
+	ftls_write(fd, ctx->executable);
+	ftls_write(fd, ": ");
+	ftls_write(fd, msg);
+	ftls_write(fd, " '");
+	ftls_write(fd, path);
+	ftls_write(fd, "': ");
+	ftls_puts(fd, strerror(errno));
 }
 
 /**
@@ -48,9 +48,10 @@ void	print_directory_error(ftls_context *ctx, const char *path)
 void	print_error(ftls_context *ctx, const char *str)
 {
 	ctx->error = true;
-	ftls_write(ctx->executable);
-	ftls_write(": ");
-	ftls_puts(str);
+	int fd = STDERR_FILENO;
+	ftls_write(fd, ctx->executable);
+	ftls_write(fd, ": ");
+	ftls_puts(fd, str);
 }
 
 /**

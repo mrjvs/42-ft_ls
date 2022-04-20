@@ -1,4 +1,5 @@
 #include "ftls_string.h"
+#include "io.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -88,22 +89,22 @@ int		ftls_strcmp(const char *one, const char *two)
 }
 
 /**
- * Write a string to STDOUT
+ * Write a string to fd
 */
-ssize_t	ftls_write(const char *str)
+ssize_t	ftls_write(int fd, const char *str)
 {
-	return write(STDOUT_FILENO, str, ftls_strlen(str));
+	return write(fd, str, ftls_strlen(str));
 }
 
 /**
- * Write a string to STDOUT and add a newline
+ * Write a string to fd and add a newline
 */
-ssize_t	ftls_puts(const char *str)
+ssize_t	ftls_puts(int fd, const char *str)
 {
-	ssize_t out = ftls_write(str);
+	ssize_t out = ftls_write(fd, str);
 	if (out == -1)
 		return -1;
-	if (ftls_write("\n") == -1)
+	if (ftls_write(fd, "\n") == -1)
 		return -1;
 	return out + 1;
 }

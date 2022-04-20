@@ -19,7 +19,7 @@ void	init_context(ftls_context *context)
 	ftls_options	*ops = &context->ops;
 	ops->show_long = 0;
 	ops->columns = 0;
-	ops->show_as_columns = 0;
+	ops->show_as_rows = 0;
 	ops->dir_as_file = 0;
 	ops->follow_links = 0;
 	ops->list_all = 0;
@@ -34,18 +34,23 @@ void	init_context(ftls_context *context)
 	ops->fetch_details = 0;
 
 	// get columns or env from terminal if it is one, otherwise turn on columns mode
+	// if anything fails, or columns is zero. also turn on columns mode
 	struct winsize w;
 	if (isatty(STDOUT_FILENO)) {
 		if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1)
 			ops->columns = w.ws_col;
 		else {
 			char *columns = ftls_getenv(context, "COLUMNS");
-			if (columns)
-				ops->columns = atoi(columns); // TODO remove atoi
+			if (columns) {
+				int columnsNum = atoi(columns); // TODO remove atoi
+				ops->columns = columnsNum > 0 ? columnsNum : 0;
+			}
 		}
 	} else {
-		ops->show_as_columns = 1;
+		ops->show_as_rows = 1;
 	}
+	if (ops->columns == 0)
+		ops->show_as_rows = 1;
 
 	char *lscolors = ftls_getenv(context, "LSCOLORS");
 	if (lscolors)

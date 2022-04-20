@@ -4,6 +4,7 @@ ft_ls
 
 # debugs
 .vscode/launch.json
+test/
 .cache
 
 # cmake files
