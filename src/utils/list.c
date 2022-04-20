@@ -1,4 +1,5 @@
 #include "list.h"
+#include <stdio.h>
 
 /**
  * Get first node from linked list
@@ -110,4 +111,24 @@ void	dl_list_init_head(dl_list *head)
 {
 	head->next = NULL;
 	head->prev = NULL;
+}
+
+/**
+ * Get linked list size
+*/
+size_t	l_list_size(l_list *head) {
+	size_t i = 0;
+	while((head = get_next_list(head)))
+		i++;
+	return i;
+}
+
+/**
+ * Get double linked list size
+*/
+size_t	dl_list_size(dl_list *head) {
+	size_t i = 0;
+	while((head = get_next_list(head)))
+		i++;
+	return i;
 }
