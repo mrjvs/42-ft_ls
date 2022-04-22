@@ -10,12 +10,14 @@
 
 typedef struct s_ftls_file_info {
 	struct stat	stat;
-	char		*path;
-	char		*name;
-	t_bool		is_dir;
-	t_bool		is_relative;
-	t_bool		has_sorting_priority;
-	t_bool		is_dotfile;
+	char				*path;
+	char				*name;
+	t_bool				is_dir;
+	t_bool				is_relative;
+	t_bool				has_sorting_priority;
+	t_bool				is_dotfile;
+	enum e_ftls_color	color;
+	t_bool				is_exec;
 } ftls_file_info;
 
 struct s_ftls_dir_entry {

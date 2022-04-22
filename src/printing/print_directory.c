@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ftls_string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "context.h"
 #include "io.h"
 #include "printing.h"
@@ -20,9 +21,10 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 	if (ctx->ops.recursive)
 		ops.recurse = -1;
 
-	// TODO temp printf
-	if (ops.show_prefix)
-		printf("%s:\n", dir->name);
+	if (ops.show_prefix) {
+		ftls_write(STDOUT_FILENO, dir->name);
+		ftls_write(STDOUT_FILENO, ":\n");
+	}
 
 	// print standard
 	l_list *lst = &(dir->files);
@@ -30,37 +32,14 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 		int *sizes = NULL;
 		int columns = max_columns_for_files(ctx, dir, &sizes);
 		if (columns == -1) {
-			// TODO print error
+			print_directory_error(ctx, dir->name);
 			return;
 		}
 		print_grid(ctx, dir, columns, sizes);
 		free(sizes);
 	} else {
-		// show blocks if not composed
-		if (!ops.force_compose) {
-			size_t blocks = 0;
-			l_list *lst = &(dir->files);
-			while ((lst = get_next_list(lst)))
-			{
-				ftls_file_info file = get_list_data(lst, struct s_ftls_dir_entry)->file;
 
-				if (should_print_file(ctx, &file))
-					blocks += file.stat.st_blocks / 2; // stat gives 512 blocks, we need to display 1024 blocks
-			}
-			printf("total %li\n", blocks);
-		}
-
-		// print long file list
-		while ((lst = get_next_list(lst)))
-		{
-			ftls_file_info file = get_list_data(lst, struct s_ftls_dir_entry)->file;
-
-			if ((file.is_dir && ops.force_compose) || !should_print_file(ctx, &file))
-				continue;
-
-			ctx->has_printed = true;
-			printf("DIR: %i, %s === %s\n", file.is_dir, file.path, file.name);
-		}
+		print_long_format(ctx, dir, ops);
 	}
 
 	if (ops.recurse == 0)
@@ -89,7 +68,7 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 			continue;
 		}
 		if (ctx->has_printed)
-			printf("\n");
+			ftls_write(STDOUT_FILENO, "\n");
 		ctx->has_printed = true;
 		print_directory(ctx, &dir, ops);
 		free_directory(&dir);

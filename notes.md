@@ -4,8 +4,10 @@ Todo:
  - [X] Error handling
  - [X] Sorting
  - [ ] get rid of atoi & printfs
- - [ ] ask harm about sorting lexicographical
+ - [X] ask harm about sorting lexicographical
  - [ ] Printing
+   - [X] Grid
+   - [ ] Long format
 
 Before turnin:
  - [ ] Cleanup proper makefile

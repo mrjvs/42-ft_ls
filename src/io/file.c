@@ -3,6 +3,7 @@
 #include "ftls_string.h"
 #include <stdio.h>
 #include <errno.h>
+#include <sys/stat.h>
 
 /**
  * retrieve file information from a path
@@ -40,7 +41,9 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 		return false;
 	}
 
+
 	// set other properties
+	out->is_exec = out->stat.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH);
 	out->is_dir = S_ISDIR(out->stat.st_mode);
 	out->is_relative = false;
 	out->is_dotfile = false;
@@ -49,6 +52,20 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	out->has_sorting_priority = out->is_relative;
 	if (name != NULL)
 		out->is_dotfile = name[0] == '.';
+
+	// colors
+	out->color = C_FILE;
+	if (out->is_exec) out->color = C_EXEC;
+	if (out->is_exec && out->stat.st_mode & S_ISUID) out->color = C_EXEC_SETUID;
+	if (out->is_exec && out->stat.st_mode & S_ISGID) out->color = C_EXEC_SETGID;
+	if (S_ISLNK(out->stat.st_mode)) out->color = C_SYMLINK;
+	if (S_ISSOCK(out->stat.st_mode)) out->color = C_SOCKET;
+	if (S_ISFIFO(out->stat.st_mode)) out->color = C_PIPE;
+	if (S_ISBLK(out->stat.st_mode)) out->color = C_BLOCK_S;
+	if (S_ISCHR(out->stat.st_mode)) out->color = C_CHAR_S;
+	if (S_ISDIR(out->stat.st_mode)) out->color = C_DIR;
+	if (S_ISDIR(out->stat.st_mode) && out->stat.st_mode & S_IWOTH) out->color = C_DIR_WRITABLE;
+	if (S_ISDIR(out->stat.st_mode) && out->stat.st_mode & (S_IWOTH | S_ISVTX)) out->color = C_DIR_WRITABLE_STICKY;
 	return true;
 }
 

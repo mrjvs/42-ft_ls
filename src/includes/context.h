@@ -10,6 +10,25 @@ enum ftls_sort {
 	FTLS_SORT_ACCESSED,
 };
 
+enum e_ftls_color {
+	C_FILE = 0,
+	C_DIR = 1,
+	C_SYMLINK = 2,
+	C_SOCKET = 3,
+	C_PIPE = 4,
+	C_EXEC = 5,
+	C_BLOCK_S = 6,
+	C_CHAR_S = 7,
+	C_EXEC_SETUID = 8,
+	C_EXEC_SETGID = 9,
+	C_DIR_WRITABLE = 10,
+	C_DIR_WRITABLE_STICKY = 11
+};
+
+typedef char						t_color_print[10]; // color print string
+typedef t_color_print				t_color_print_collection[2]; // foreground and background
+typedef t_color_print_collection	t_all_colors[12]; // amount of colors
+
 /**
  * ftls options struct, keeps track of options for the runtime.
 */
@@ -37,7 +56,7 @@ typedef struct s_ftls_context {
 	t_bool			has_printed;
 	t_bool			major_error;
 	t_bool			error;
-	char			*colors;		// colors used for printing
+	t_all_colors	colors;			// colors used for printing
 	char			**envp;			// pointer to environment variables
 	char			*executable;	// name of executable thats being used
 }	ftls_context;

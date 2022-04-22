@@ -17,6 +17,7 @@ int		should_print_file(ftls_context *ctx, ftls_file_info *file);
 
 void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops);
 void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes);
+void	print_long_format(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops);
 
 void	print_access_error(ftls_context *ctx, char *path);
 void	print_directory_error(ftls_context *ctx, const char *path);
@@ -25,6 +26,6 @@ void	print_error(ftls_context *ctx, const char *str);
 void	print_errno(ftls_context *ctx);
 
 int		max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes);
-int		print_simple_name(ftls_context *ctx, ftls_file_info *file);
+void	print_simple_name(ftls_context *ctx, ftls_file_info *file);
 
 #endif

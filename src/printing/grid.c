@@ -3,7 +3,7 @@
 #include "io.h"
 #include "list.h"
 #include "printing.h"
-#include <stdio.h>
+#include <unistd.h>
 
 /**
  * Get width for every column, taking in account every file
@@ -92,16 +92,19 @@ int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes) {
  * Print a grid of files
 */
 void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes) {
+	// TODO grid alignment is fucked
 	size_t dir_size = 0;
 	l_list	*lst = &(dir->files);
 	while((lst = get_next_list(lst)))
 		dir_size += should_print_file(ctx, &(get_list_data(lst, struct s_ftls_dir_entry)->file)) > 0;
 	int rows = (dir_size / columns) + (dir_size % columns != 0);
 
+	// every row
 	for (int y = 0; y < rows; y++) {
 		lst = get_next_list((&(dir->files)));
 		// amount to skip
 		int to_skip = y; // offset printing by Y
+		size_t prev_padd = 0;
 		for (int j = 0; j < columns; j++) {
 			// skip certain amount
 			for (int i = 0; i < to_skip && lst;) {
@@ -126,14 +129,22 @@ void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes) {
 				break;
 
 			// actually print
-			if (j != 0)
-				printf("  ");
+			t_bool first = j == 0;
+			int amountOfSpaces = 0;
+			if (!first) {
+				amountOfSpaces += 2; // 2 spaces between entries
+				amountOfSpaces += prev_padd;
+			}
+			for (int i = 0; i < amountOfSpaces; i++)
+				ftls_write(STDOUT_FILENO, " ");
 			struct s_ftls_dir_entry *entry = get_list_data(lst, struct s_ftls_dir_entry);
-			printf("%-*s", sizes[j], entry->file.name);
+			print_simple_name(ctx, &(entry->file));
+			prev_padd = sizes[j] - ftls_strlen(entry->file.name);
+			ctx->has_printed = true;
 			
-			// for next row
+			// for next column
 			to_skip = rows;
 		}
-		printf("\n");
+		ftls_write(STDOUT_FILENO, "\n");
 	}
 }
