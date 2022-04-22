@@ -5,9 +5,9 @@
 #include "printing.h"
 #include <stdio.h>
 
-static void	free_str_arr(char **arr) {
-	for (int i = 0; arr[i]; i++)
-		free(arr[i]);
+static void	free_str_arr(struct s_ftls_col *arr) {
+	for (int i = 0; arr[i].str; i++)
+		free(arr[i].str);
 	free(arr);
 }
 
@@ -15,21 +15,32 @@ static void	free_str_arr(char **arr) {
  * Get a long line and populate it into `line`.
  * returns false if failed to allocate memory
 */
-static t_bool	get_long_line(ftls_context *ctx, char ***line, ftls_file_info *file) {
+static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_file_info *file) {
 	(void)ctx;
-	char **l = malloc(sizeof(char*) * 7);
+	(void)file;
+	struct s_ftls_col *l = malloc(sizeof(struct s_ftls_col) * 7);
 	if (!l)
 		return false;
-	for (int i = 0; i < 7; i++)
-		l[i] = NULL;
+	for (int i = 0; i < 7; i++) {
+		l[i].name = false;
+		l[i].str = NULL;
+		l[i].exists = false;
+		l[i].file = NULL;
+	}
 
 	// gather strings
-	l[0] = ftls_strdup("TEST");
-	if (!l[0]) { free_str_arr(l); return false; }
-	l[1] = ftls_strdup("TEST2");
-	if (!l[1]) { free_str_arr(l); return false; }
-	l[2] = ftls_strdup(file->name);
-	if (!l[2]) { free_str_arr(l); return false; }
+	l[0].str = ftls_strdup("TEST");
+	if (!l[0].str) { free_str_arr(l); return false; }
+	l[1].str = ftls_strdup("TEST2");
+	if (!l[1].str) { free_str_arr(l); return false; }
+
+	l[2].str = NULL;
+	l[2].name = true;
+	l[2].file = file;
+
+	l[0].exists = true;
+	l[1].exists = true;
+	l[2].exists = true;
 
 	*line = l;
 	return true;
@@ -39,7 +50,7 @@ static t_bool	get_long_line(ftls_context *ctx, char ***line, ftls_file_info *fil
  * Actually print the long lines
 */
 static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
-	char	***lines = NULL;
+	struct s_ftls_col	**lines = NULL;
 	 
 	// get size of dir
 	size_t	dir_size = 0;
@@ -55,10 +66,11 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 	}
 
 	// allocate memory
-	lines = malloc(sizeof(char*) * dir_size+1);
+	lines = malloc(sizeof(struct s_ftls_col *) * dir_size+1);
 	if (!lines) {
 		return false;
 	}
+	lines[dir_size] = NULL;
 
 	// fetch strings for printing
 	size_t i = 0;
@@ -85,7 +97,7 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 	for (int i = 0; i < 7; i++) {
 		column_sizes[i] = 0;
 		for (size_t j = 0; j < dir_size; j++) {
-			int size = (int)ftls_strlen(lines[j][i]);
+			int size = (int)ftls_strlen(lines[j][i].str);
 			if (column_sizes[i] < size)
 				column_sizes[i] = size;
 		}
@@ -93,20 +105,23 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 
 	// print lines & columns
 	for (size_t i = 0; i < dir_size; i++) {
-		for (int j = 0; lines[i][j]; j++) {
-			size_t size = ftls_strlen(lines[i][j]);
+		for (int j = 0; lines[i][j].exists; j++) {
+			size_t size = ftls_strlen(lines[i][j].str);
 
 			// padding
 			size_t padding = 0;
-			if (j != 0 && size != 0)
+			if (j != 0)
 				padding += 2;
-			if (lines[i][j+1] != 0) // if its not the end, add more padding
+			if (!lines[i][j+1].exists) // if its not the end, add more padding
 				padding += column_sizes[j] - size;
 			for (size_t padd_i = 0; padd_i < padding; padd_i++)
 				ftls_write(STDOUT_FILENO, " ");
 			
 			// write data
-			ftls_write(STDOUT_FILENO, lines[i][j]);
+			if (lines[i][j].name)
+				print_simple_name(ctx, lines[i][j].file);
+			else
+				ftls_write(STDOUT_FILENO, lines[i][j].str);
 			
 		}
 		ftls_write(STDOUT_FILENO, "\n");

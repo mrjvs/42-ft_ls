@@ -4,6 +4,7 @@
 #include "bool.h"
 #include "context.h"
 #include "io.h"
+#include <stddef.h>
 
 typedef struct s_ftls_print_options {
 	t_bool	show_prefix;	// show prefix of directory
@@ -12,6 +13,12 @@ typedef struct s_ftls_print_options {
 	int		recurse;		// how many times to recurse, -1 for infinite, gets overwritten by context
 }	ftls_print_options;
 
+struct s_ftls_col {
+	char			*str;
+	t_bool			exists;
+	ftls_file_info	*file;
+	t_bool			name;
+};
 
 int		should_print_file(ftls_context *ctx, ftls_file_info *file);
 
