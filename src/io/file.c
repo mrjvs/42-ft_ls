@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <pwd.h>
 #include <grp.h>
+#include <linux/limits.h>
 
 /**
  * retrieve file information from a path
@@ -25,6 +26,7 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	if (!out->path)
 		return false;
 	out->name = NULL;
+	out->link_path = NULL;
 	if (name) {
 		out->name = ftls_strdup(name);
 		if (!out->name) {
@@ -45,11 +47,28 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 		return false;
 	}
 
+	out->is_link = S_ISLNK(out->stat.st_mode);
+	if (out->is_link) {
+		out->link_path = malloc(PATH_MAX+1);
+		if (out->link_path == NULL) {
+			free(out->name);
+			free(out->path);
+			return false;
+		}
+		ssize_t amount_bytes = readlink(out->path, out->link_path, PATH_MAX);
+		if (amount_bytes == -1) {
+			free(out->name);
+			free(out->path);
+			return false;
+		}
+		out->link_path[amount_bytes] = 0;
+	}
 
 	// owner & group
 	struct passwd *user = getpwuid(out->stat.st_uid);
 	struct group *group = getgrgid(out->stat.st_gid);
 	if (!user || !group) {
+		free(out->link_path);
 		free(out->name);
 		free(out->path);
 		return false;
@@ -57,6 +76,7 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	out->user = ftls_strdup(user->pw_name);
 	out->group = ftls_strdup(group->gr_name);
 	if (!user || !group) {
+		free(out->link_path);
 		free(out->name);
 		free(out->path);
 		free(out->user);
