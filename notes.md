@@ -4,13 +4,14 @@ Todo:
  - [X] Error handling
  - [X] Sorting
  - [X] get rid of printfs
- - [ ] get rid of atoi and strchr
+ - [X] get rid of atoi and strchr
  - [X] ask harm about sorting lexicographical
  - [ ] Printing
    - [X] Grid
    - [X] Long format
    - [X] @ if any xattr, + if ACL
-   - [ ] timestamps
+   - [ ] Timestamps
+   - [ ] Fix janky grid
 
 Before turnin:
  - [ ] Compile with MAC_OS define
