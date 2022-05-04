@@ -11,6 +11,9 @@ static void	free_str_arr(struct s_ftls_col *arr) {
 	free(arr);
 }
 
+// TODO timestamps
+// TODO options
+// TODO links
 /**
  * Get a long line and populate it into `line`.
  * returns false if failed to allocate memory
@@ -29,21 +32,29 @@ static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_fi
 	}
 
 	// gather strings
-	l[0].str = ftls_strdup("acl goes here");
+	l[0].str = get_acl(file);
 	if (!l[0].str) { free_str_arr(l); return false; }
-	l[1].str = ftls_strdup(file->user);
+	l[1].str = ftls_ltoa(file->stat.st_nlink);
 	if (!l[1].str) { free_str_arr(l); return false; }
-	l[2].str = ftls_strdup(file->group);
+	l[2].str = ftls_strdup(file->user);
 	if (!l[2].str) { free_str_arr(l); return false; }
+	l[3].str = ftls_strdup(file->group);
+	if (!l[3].str) { free_str_arr(l); return false; }
+	l[4].str = ftls_ltoa(file->stat.st_size);
+	if (!l[4].str) { free_str_arr(l); return false; }
 
-	l[3].str = NULL;
-	l[3].name = true;
-	l[3].file = *file;
+	l[5].str = NULL;
+	l[5].name = true;
+	l[5].file = *file;
 
 	l[0].exists = true;
 	l[1].exists = true;
+	l[1].right_align = true;
 	l[2].exists = true;
 	l[3].exists = true;
+	l[4].exists = true;
+	l[4].right_align = true;
+	l[5].exists = true;
 
 	*line = l;
 	return true;

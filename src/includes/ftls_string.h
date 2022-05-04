@@ -15,4 +15,6 @@ ssize_t	ftls_write(int fd, const char *str);
 void	*ftls_calloc(size_t n, size_t size);
 void	ftls_bzero(void *data, size_t n);
 
+char	*ftls_ltoa(long n);
+
 #endif

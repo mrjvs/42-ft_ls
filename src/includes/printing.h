@@ -35,5 +35,6 @@ void	print_errno(ftls_context *ctx);
 
 int		max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes);
 void	print_simple_name(ftls_context *ctx, ftls_file_info *file);
+char	*get_acl(ftls_file_info *file);
 
 #endif
