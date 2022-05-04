@@ -36,3 +36,20 @@ char	*ftls_ltoa(long n) {
 
 	return str;
 }
+
+int	ftls_atoi(char *str) {
+	if (!str)
+		return 0;
+	int out = 0;
+	int sign = 1;
+	if (*str == '-') {
+		str++;
+		sign = -1;
+	}
+	while (*str >= '0' && *str <= '9') {
+		out *= 10;
+		out += *str - '0';
+		str++;
+	}
+	return out * sign;
+}

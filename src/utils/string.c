@@ -108,3 +108,12 @@ ssize_t	ftls_puts(int fd, const char *str)
 		return -1;
 	return out + 1;
 }
+
+char	*ftls_strchr(char *str, char c) {
+	while (*str != 0) {
+		if (*str == c)
+			return str;
+		str++;
+	}
+	return NULL;
+}

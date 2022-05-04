@@ -28,7 +28,7 @@ static t_bool	is_valid_colors(char *colors) {
 	if (ftls_strlen(colors) != 22)
 		return false;
 	for (int i = 0; colors[i]; i++) {
-		if (strchr("abcdefghABCDEFGHx", (int)colors[i]) == NULL) // TODO strchr
+		if (ftls_strchr("abcdefghABCDEFGHx", (int)colors[i]) == NULL)
 			return false;
 	}
 	return true;
@@ -114,7 +114,7 @@ void		init_context(ftls_context *context)
 		else {
 			char *columns = ftls_getenv(context, "COLUMNS");
 			if (columns) {
-				int columnsNum = atoi(columns); // TODO remove atoi
+				int columnsNum = ftls_atoi(columns);
 				ops->columns = columnsNum > 0 ? columnsNum : 0;
 			}
 		}

@@ -16,5 +16,7 @@ void	*ftls_calloc(size_t n, size_t size);
 void	ftls_bzero(void *data, size_t n);
 
 char	*ftls_ltoa(long n);
+int		ftls_atoi(char *str);
+char	*ftls_strchr(char *str, char c);
 
 #endif
