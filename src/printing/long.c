@@ -14,7 +14,6 @@ static void	free_str_arr(struct s_ftls_col *arr) {
 
 // TODO timestamps
 // TODO options
-// TODO links
 /**
  * Get a long line and populate it into `line`.
  * returns false if failed to allocate memory
