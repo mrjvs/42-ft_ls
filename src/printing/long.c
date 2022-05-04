@@ -25,22 +25,25 @@ static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_fi
 		l[i].name = false;
 		l[i].str = NULL;
 		l[i].exists = false;
-		l[i].file = NULL;
+		l[i].right_align = false;
 	}
 
 	// gather strings
-	l[0].str = ftls_strdup("TEST");
+	l[0].str = ftls_strdup("acl goes here");
 	if (!l[0].str) { free_str_arr(l); return false; }
-	l[1].str = ftls_strdup("TEST2");
+	l[1].str = ftls_strdup(file->user);
 	if (!l[1].str) { free_str_arr(l); return false; }
+	l[2].str = ftls_strdup(file->group);
+	if (!l[2].str) { free_str_arr(l); return false; }
 
-	l[2].str = NULL;
-	l[2].name = true;
-	l[2].file = file;
+	l[3].str = NULL;
+	l[3].name = true;
+	l[3].file = *file;
 
 	l[0].exists = true;
 	l[1].exists = true;
 	l[2].exists = true;
+	l[3].exists = true;
 
 	*line = l;
 	return true;
@@ -105,24 +108,29 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 
 	// print lines & columns
 	for (size_t i = 0; i < dir_size; i++) {
+		size_t padding_after = 0;
 		for (int j = 0; lines[i][j].exists; j++) {
 			size_t size = ftls_strlen(lines[i][j].str);
 
 			// padding
 			size_t padding = 0;
 			if (j != 0)
-				padding += 2;
-			if (!lines[i][j+1].exists) // if its not the end, add more padding
+				padding += 1;
+			if (lines[i][j].right_align)
 				padding += column_sizes[j] - size;
+			padding += padding_after;
 			for (size_t padd_i = 0; padd_i < padding; padd_i++)
 				ftls_write(STDOUT_FILENO, " ");
 			
 			// write data
 			if (lines[i][j].name)
-				print_simple_name(ctx, lines[i][j].file);
+				print_simple_name(ctx, &(lines[i][j].file));
 			else
 				ftls_write(STDOUT_FILENO, lines[i][j].str);
 			
+			padding_after = 0;
+			if (!lines[i][j].right_align)
+				padding_after += column_sizes[j] - size;
 		}
 		ftls_write(STDOUT_FILENO, "\n");
 	}

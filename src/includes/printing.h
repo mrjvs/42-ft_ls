@@ -16,7 +16,8 @@ typedef struct s_ftls_print_options {
 struct s_ftls_col {
 	char			*str;
 	t_bool			exists;
-	ftls_file_info	*file;
+	ftls_file_info	file;
+	t_bool			right_align;
 	t_bool			name;
 };
 

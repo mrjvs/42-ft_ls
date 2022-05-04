@@ -1,9 +1,13 @@
 #include "context.h"
 #include "io.h"
 #include "ftls_string.h"
+#include <grp.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <pwd.h>
+#include <grp.h>
 
 /**
  * retrieve file information from a path
@@ -42,6 +46,24 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	}
 
 
+	// owner & group
+	struct passwd *user = getpwuid(out->stat.st_uid);
+	struct group *group = getgrgid(out->stat.st_gid);
+	if (!user || !group) {
+		free(out->name);
+		free(out->path);
+		return false;
+	}
+	out->user = ftls_strdup(user->pw_name);
+	out->group = ftls_strdup(group->gr_name);
+	if (!user || !group) {
+		free(out->name);
+		free(out->path);
+		free(out->user);
+		free(out->group);
+		return false;
+	}
+	
 	// set other properties
 	out->is_exec = out->stat.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH);
 	out->is_dir = S_ISDIR(out->stat.st_mode);
@@ -77,4 +99,6 @@ void	free_file_info(ftls_file_info *file) {
 		return;
 	free(file->path);
 	free(file->name);
+	free(file->user);
+	free(file->group);
 }

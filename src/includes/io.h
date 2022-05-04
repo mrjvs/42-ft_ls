@@ -12,6 +12,8 @@ typedef struct s_ftls_file_info {
 	struct stat	stat;
 	char				*path;
 	char				*name;
+	char				*user;
+	char				*group;
 	t_bool				is_dir;
 	t_bool				is_relative;
 	t_bool				has_sorting_priority;
