@@ -87,7 +87,7 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	if (S_ISCHR(out->stat.st_mode)) out->color = C_CHAR_S;
 	if (S_ISDIR(out->stat.st_mode)) out->color = C_DIR;
 	if (S_ISDIR(out->stat.st_mode) && out->stat.st_mode & S_IWOTH) out->color = C_DIR_WRITABLE;
-	if (S_ISDIR(out->stat.st_mode) && out->stat.st_mode & (S_IWOTH | S_ISVTX)) out->color = C_DIR_WRITABLE_STICKY;
+	if (S_ISDIR(out->stat.st_mode) && (out->stat.st_mode & (S_IWOTH | S_ISVTX)) == (S_IWOTH | S_ISVTX)) out->color = C_DIR_WRITABLE_STICKY;
 	return true;
 }
 
