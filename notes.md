@@ -3,12 +3,18 @@ Todo:
  - [X] make sure of no leaks
  - [X] Error handling
  - [X] Sorting
- - [ ] get rid of atoi & printfs
+ - [X] get rid of printfs
+ - [ ] get rid of atoi and strchr
  - [X] ask harm about sorting lexicographical
  - [ ] Printing
    - [X] Grid
-   - [ ] Long format
+   - [X] Long format
+   - [X] @ if any xattr, + if ACL
+   - [ ] timestamps
 
 Before turnin:
+ - [ ] Compile with MAC_OS define
+ - [ ] Check all options
+ - [ ] Test everything on mac (acl, xattr, symlinks, colors, sorting)
  - [ ] Cleanup proper makefile
  - [X] Remove libs folder

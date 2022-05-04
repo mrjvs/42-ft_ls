@@ -4,6 +4,7 @@
 #include "io.h"
 #include "printing.h"
 #include <stdio.h>
+#include <unistd.h>
 
 static void	free_str_arr(struct s_ftls_col *arr) {
 	for (int i = 0; arr[i].str; i++)
@@ -31,7 +32,7 @@ static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_fi
 	}
 
 	// gather strings
-	l[0].str = get_acl(file);
+	l[0].str = get_perms(file);
 	if (!l[0].str) { free_str_arr(l); return false; }
 	l[0].exists = true;
 
@@ -176,7 +177,14 @@ void			print_long_format(ftls_context *ctx, ftls_dir *dir, ftls_print_options op
 			if (should_print_file(ctx, &file))
 				blocks += file.stat.st_blocks / 2; // stat gives 512 blocks, we need to display 1024 blocks
 		}
-		printf("total %li\n", blocks); // TODO remove printf
+		ftls_write(STDOUT_FILENO, "total ");
+		char *block_str = ftls_ltoa(blocks);
+		if (block_str) {
+			ftls_write(STDOUT_FILENO, block_str);
+			free(block_str);
+		}
+		ftls_write(STDOUT_FILENO, "\n");
+
 	}
 
 	// print lines

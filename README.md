@@ -14,7 +14,7 @@ Remaking the `ls` command from scratch.<br/>
 ## functions used from standard library
  - memory functions: `malloc`, `free`
  - dir and file functions: `opendir`, `closedir`, `readdir`, `stat`, `lstat`, `readlink`
- - permission functions: `getpwuid`, `getgrgid`, `listxattr`, ``
+ - permission functions: `getpwuid`, `getgrgid`, `listxattr`, `acl_get_link_np`, `acl_free`, `acl_get_entry`
  - IO functions: `write`, `isatty`, `ioctl` (for terminal width)
  - error functions: `strerror`
 

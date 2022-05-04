@@ -18,6 +18,8 @@ typedef struct s_ftls_file_info {
 	t_bool				is_dir;
 	t_bool				is_link;
 	t_bool				is_relative;
+	t_bool				has_acl;
+	t_bool				has_xattr;
 	t_bool				has_sorting_priority;
 	t_bool				is_dotfile;
 	enum e_ftls_color	color;

@@ -9,6 +9,11 @@
 #include <pwd.h>
 #include <grp.h>
 #include <linux/limits.h>
+#include <sys/xattr.h>
+
+#ifdef MACOS
+#  include <sys/acl.h>
+#endif
 
 /**
  * retrieve file information from a path
@@ -47,6 +52,7 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 		return false;
 	}
 
+	// links
 	out->is_link = S_ISLNK(out->stat.st_mode);
 	if (out->is_link) {
 		out->link_path = malloc(PATH_MAX+1);
@@ -59,11 +65,31 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 		if (amount_bytes == -1) {
 			free(out->name);
 			free(out->path);
+			free(out->link_path);
 			return false;
 		}
 		out->link_path[amount_bytes] = 0;
 	}
 
+# ifdef MACOS
+	// extended attrs
+	acl_t acl = NULL;
+    acl_entry_t dummy;
+	acl = acl_get_link_np(filename, ACL_TYPE_EXTENDED);
+    if (acl && acl_get_entry(acl, ACL_FIRST_ENTRY, &dummy) == -1) {
+        acl_free(acl);
+        acl = NULL;
+    }
+    ssize_t xattr = listxattr(out->path, NULL, 0, XATTR_NOFOLLOW);
+# else
+	void *acl = NULL;
+    ssize_t xattr = listxattr(out->path, NULL, 0);
+# endif
+    if (xattr < 0)
+		xattr = 0;
+
+	out->has_xattr = xattr > 0;
+	out->has_acl = acl != NULL;
 	// owner & group
 	struct passwd *user = getpwuid(out->stat.st_uid);
 	struct group *group = getgrgid(out->stat.st_gid);
@@ -121,4 +147,5 @@ void	free_file_info(ftls_file_info *file) {
 	free(file->name);
 	free(file->user);
 	free(file->group);
+	free(file->link_path);
 }
