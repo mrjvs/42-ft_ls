@@ -1,6 +1,6 @@
 NAME=ft_ls
 CC=gcc
-FLAGS=-Werror -Wall -Wextra -DMACOS
+FLAGS=-Werror -Wall -Wextra -DMACOS -Dst_mtim=st_mtimespec -Dst_atim=st_atimespec -Dst_ctim=st_ctimespec
 
 INCLUDES=./src/includes
 
