@@ -112,7 +112,6 @@ int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes) {
  * Print a grid of files
 */
 void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes) {
-	// TODO grid alignment is fucked
 	size_t dir_size = 0;
 	l_list	*lst = &(dir->files);
 	while((lst = get_next_list(lst)))
