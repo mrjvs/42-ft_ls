@@ -17,10 +17,10 @@ Todo:
    - [X] implement `-d`
    - [X] implement `-g`
    - [X] Hangs on /tmp of cmake (except if `-a`)
+   - [ ] breaks on plain file and one argument
 
 Before turnin:
- - [ ] Compile with MAC_OS define
- - [ ] Check all options
- - [ ] Test everything on mac (acl, xattr, symlinks, colors, sorting)
- - [ ] Cleanup proper makefile
+ - [X] Compile with MAC_OS define
+ - [X] Test everything on mac (acl, xattr, symlinks, colors, sorting)
+ - [X] Cleanup proper makefile
  - [X] Remove libs folder

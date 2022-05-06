@@ -1,6 +1,6 @@
 NAME=ft_ls
 CC=gcc
-FLAGS=-Werror -Wall -Wextra -g
+FLAGS=-Werror -Wall -Wextra -DMACOS
 
 INCLUDES=./src/includes
 
@@ -9,7 +9,10 @@ HEADERS=\
 	bool.h \
 	cli.h \
 	io.h \
-	list.h
+	list.h \
+	path.h \
+	printing.h \
+	ftls_string.h
 
 SOURCES=\
 	main.c \
@@ -19,6 +22,16 @@ SOURCES=\
 	io/file.c \
 	io/gather.c \
 	io/directory.c \
+	io/sorting.c \
+	printing/error.c \
+	printing/grid.c \
+	printing/long.c \
+	printing/perms.c \
+	printing/print_directory.c \
+	printing/simple_name.c \
+	utils/num.c \
+	utils/path.c \
+	utils/string.c \
 	utils/list.c
 
 SOURCES_PREFIXED=$(addprefix ./src/, $(SOURCES))
