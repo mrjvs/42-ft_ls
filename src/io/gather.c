@@ -24,7 +24,7 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 	}
 
 	// if only one argument and its a directory
-	if (has_one_arg)
+	if (has_one_arg && !ctx->ops.dir_as_file)
 	{
 		ftls_file_info file;
 		if (!retrieve_file_info(ctx, first_arg, NULL, &file)) {
@@ -46,7 +46,7 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 			}
 			sort_directory(ctx, &dir);
 
-			ftls_print_options print_options = { .show_prefix = false, .display_full = true, .force_compose = false, .recurse = 0 };
+			ftls_print_options print_options = { .show_prefix = false, .show_total = true, .display_full = true, .force_compose = false, .recurse = 0 };
 			print_directory(ctx, &dir, print_options);
 			free_directory(&dir);
 			free(first_arg);
@@ -57,9 +57,17 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 
 	// treat as list of files and directories
 	ftls_dir dir;
-	gather_composed_directory(ctx, argc, argv, &dir);
+	char *one_args = first_arg;
+	if (has_one_arg)
+		gather_composed_directory(ctx, 1, &one_args, &dir);
+	else
+		gather_composed_directory(ctx, argc, argv, &dir);
 	sort_directory(ctx, &dir);
-	ftls_print_options print_options = { .show_prefix = false, .display_full = false, .force_compose = true, .recurse = 1 };
+	ftls_print_options print_options = { .show_prefix = false, .show_total = false, .display_full = false, .force_compose = true, .recurse = 1 };
+	if (ctx->ops.dir_as_file) {
+		print_options.recurse = 0;
+		print_options.display_full = true;
+	}
 	print_directory(ctx, &dir, print_options);
 	free_directory(&dir);
 	return true;

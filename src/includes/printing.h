@@ -13,6 +13,7 @@ typedef struct s_ftls_print_options {
 	t_bool	display_full;	// show directories as well as files
 	t_bool	force_compose;	// force display of compose: hides directories and shows dotfiles in directory recurse 
 	int		recurse;		// how many times to recurse, -1 for infinite, gets overwritten by context
+	t_bool	show_total;		// show total block count
 }	ftls_print_options;
 
 struct s_ftls_col {

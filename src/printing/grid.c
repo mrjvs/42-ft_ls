@@ -72,11 +72,12 @@ int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes) {
 
 	size_t dir_size = 0;
 	l_list	*lst = &(dir->files);
-	while((lst = get_next_list(lst)))
+	while((lst = get_next_list(lst))) {
 		dir_size += should_print_file(ctx, &(get_list_data(lst, struct s_ftls_dir_entry)->file)) > 0;
+	}
 
 	// showing as rows or no columns found in terminal
-	if (columns == 0 || ctx->ops.show_as_rows) {
+	if (dir_size == 0 || columns == 0 || ctx->ops.show_as_rows) {
 		int *cols = malloc(sizeof(int) * 1);
 		if (!cols)
 			return -1;

@@ -149,7 +149,7 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 	{
 		ftls_file_info file = get_list_data(lst, struct s_ftls_dir_entry)->file;
 
-		if ((file.is_dir && ops.force_compose) || !should_print_file(ctx, &file))
+		if ((file.is_dir && !ops.display_full) || !should_print_file(ctx, &file))
 			continue;
 
 		dir_size++;
@@ -169,7 +169,7 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 	{
 		ftls_file_info file = get_list_data(lst, struct s_ftls_dir_entry)->file;
 
-		if ((file.is_dir && ops.force_compose) || !should_print_file(ctx, &file))
+		if ((file.is_dir && !ops.display_full) || !should_print_file(ctx, &file))
 			continue;
 
 		if (!get_long_line(ctx, lines + i, &file)) {
@@ -211,14 +211,16 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 			
 			// write data
 			if (lines[i][j].name) {
-				print_simple_name(ctx, &(lines[i][j].file));
-				if (lines[i][j].file.is_link) {
+				ftls_file_info *f = &(lines[i][j].file);
+				print_simple_name(ctx, f);
+				if (f->is_link) {
 					ftls_write(STDOUT_FILENO, " -> ");
-					ftls_write(STDOUT_FILENO, lines[i][j].file.link_path);
+					ftls_write(STDOUT_FILENO, f->link_path);
 				}
 			}
 			else
 				ftls_write(STDOUT_FILENO, lines[i][j].str);
+			ctx->has_printed = true;
 			
 			padding_after = 0;
 			if (!lines[i][j].right_align)
@@ -240,7 +242,7 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 */
 void			print_long_format(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 	// show blocks if not composed
-	if (!ops.force_compose) {
+	if (ops.show_total) {
 		size_t blocks = 0;
 		l_list *lst = &(dir->files);
 		while ((lst = get_next_list(lst)))
@@ -257,7 +259,7 @@ void			print_long_format(ftls_context *ctx, ftls_dir *dir, ftls_print_options op
 			free(block_str);
 		}
 		ftls_write(STDOUT_FILENO, "\n");
-
+		ctx->has_printed = true;
 	}
 
 	// print lines

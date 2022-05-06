@@ -9,6 +9,8 @@
 int	should_print_file(ftls_context *ctx, ftls_file_info *file) {
 	if (ctx->ops.list_all)
 		return 1;
+	if (ctx->ops.dir_as_file)
+		return 1;
 	if (file->is_dotfile)
 		return 0;
 	return 1;
@@ -49,8 +51,11 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 	ops.show_prefix = true;
 	t_bool force_compose = ops.force_compose;
 	ops.force_compose = false;
+	ops.show_total = true;
 	if (ops.recurse > 0)
 		ops.recurse--;
+	if (ops.recurse == 0)
+		ops.display_full = true;
 	lst = &(dir->files);
 	while ((lst = get_next_list(lst)))
 	{

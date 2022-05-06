@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "context.h"
 #include "cli.h"
 #include "ftls_string.h"
@@ -47,6 +46,8 @@ static void	post_process_options(ftls_context *ctx)
 	}
 	if (ctx->ops.show_long)
 		ctx->ops.fetch_details = true;
+	if (ctx->ops.dir_as_file)
+		ctx->ops.recursive = false;
 }
 
 static void process_invalid_args(ftls_context *ctx, int err)
