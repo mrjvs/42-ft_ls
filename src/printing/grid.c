@@ -5,14 +5,27 @@
 #include "printing.h"
 #include <unistd.h>
 
+static int get_rows_for_grid(size_t dir_size, int columns) {
+	int count = 0;
+	ssize_t s = (ssize_t)dir_size;
+	while (s > 0) {
+		count++;
+		s -= columns;
+	}
+	return count;
+}
+
 /**
  * Get width for every column, taking in account every file
 */
-static void	get_sizing_for_rows(ftls_context *ctx, int *sizes, int columns, ftls_dir *dir, size_t dir_size) {
+static void	get_sizing_for_rows(ftls_context *ctx, int *sizes, int columns, ftls_dir *dir, size_t dir_size, int *lowest) {
 	int i = 0;
 	int j = 0;
-	int rows = (dir_size / columns) + (dir_size % columns != 0);
+	int rows = get_rows_for_grid(dir_size, columns);
 	l_list *lst = &(dir->files);
+	int lowestColumns = 0;
+	for (int c = 0; c < columns; c++)
+		sizes[c] = 0;
 	while ((lst = get_next_list(lst))) {
 		struct s_ftls_dir_entry *entry = get_list_data(lst, struct s_ftls_dir_entry);
 		if (!should_print_file(ctx, &(entry->file)))
@@ -22,10 +35,16 @@ static void	get_sizing_for_rows(ftls_context *ctx, int *sizes, int columns, ftls
 			sizes[j] = len;
 		i++;
 		if (i >= rows) {
+			if (sizes[j] != 0)
+				lowestColumns = j+1;
 			i = 0;
 			j++;
 		}
 	}
+	if (j < columns && sizes[j] != 0)
+		lowestColumns = j+1;
+	if (lowest)
+		*lowest = lowestColumns;
 }
 
 /**
@@ -61,24 +80,25 @@ int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes) {
 		int *cols = malloc(sizeof(int) * 1);
 		if (!cols)
 			return -1;
-		get_sizing_for_rows(ctx, cols, 1, dir, dir_size);
+		get_sizing_for_rows(ctx, cols, 1, dir, dir_size, 0);
 		*sizes = cols;
 		return 1;
 	}
 
 	while (true) {
 		int *cols = malloc(sizeof(int) * currentCol);
+		int lowest;
 		if (!cols)
 			return -1;
 		for (int i = 0; i < currentCol; i++)
 			cols[i] = 0;
-		get_sizing_for_rows(ctx, cols, currentCol, dir, dir_size);
-		if (!check_if_fits(cols, currentCol, columns)) {
+		get_sizing_for_rows(ctx, cols, currentCol, dir, dir_size, &lowest);
+		if (!check_if_fits(cols, lowest, columns)) {
 			if (currentCol == 1)
 				currentCol++;
-			get_sizing_for_rows(ctx, cols, currentCol-1, dir, dir_size);
+			get_sizing_for_rows(ctx, cols, currentCol-1, dir, dir_size, &lowest);
 			*sizes = cols;
-			return currentCol-1;
+			return lowest;
 		} else if (dir_size == (size_t)currentCol) {
 			*sizes = cols;
 			return currentCol;
@@ -97,7 +117,7 @@ void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes) {
 	l_list	*lst = &(dir->files);
 	while((lst = get_next_list(lst)))
 		dir_size += should_print_file(ctx, &(get_list_data(lst, struct s_ftls_dir_entry)->file)) > 0;
-	int rows = (dir_size / columns) + (dir_size % columns != 0);
+	int rows = get_rows_for_grid(dir_size, columns);
 
 	// every row
 	for (int y = 0; y < rows; y++) {

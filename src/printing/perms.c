@@ -47,7 +47,6 @@ static char	get_perms_exec_other(ftls_file_info *file) {
 	return '-';
 }
 
-// TODO follow directory if one arg (no trailing slash) (cant reproduce??)
 char	*get_perms(ftls_file_info *file) {
 	char *out = malloc(12);
 	if (!out)
