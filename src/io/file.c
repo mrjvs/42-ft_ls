@@ -75,7 +75,7 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	// extended attrs
 	acl_t acl = NULL;
     acl_entry_t dummy;
-	acl = acl_get_link_np(filename, ACL_TYPE_EXTENDED);
+	acl = acl_get_link_np(out->path, ACL_TYPE_EXTENDED);
     if (acl && acl_get_entry(acl, ACL_FIRST_ENTRY, &dummy) == -1) {
         acl_free(acl);
         acl = NULL;
