@@ -19,8 +19,6 @@ static int	process_option(void *ctx_ptr, char option)
 		ctx->ops.recursive = 1;
 	else if (option == 't')
 		ctx->ops.should_sort = 1;
-	else if (option == 't')
-		ctx->ops.should_sort = 1;
 	else if (option == 'u')
 		ctx->ops.sort_method = FTLS_SORT_ACCESSED;
 	else if (option == 'f')
@@ -43,8 +41,10 @@ static void	post_process_options(ftls_context *ctx)
 		ctx->ops.show_access_date = true;
 	if (!ctx->ops.should_sort)
 		ctx->ops.sort_method = FTLS_SORT_LEXICOGRAPHICAL;
-	if (ctx->ops.disable_sort)
+	if (ctx->ops.disable_sort) {
 		ctx->ops.sort_method = FTLS_SORT_NONE;
+		ctx->ops.list_all = true;
+	}
 	if (ctx->ops.show_long)
 		ctx->ops.fetch_details = true;
 }
