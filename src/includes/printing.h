@@ -27,7 +27,7 @@ struct s_ftls_col {
 int		should_print_file(ftls_context *ctx, ftls_file_info *file);
 
 void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops);
-void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes);
+void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes, ftls_print_options ops);
 void	print_long_format(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops);
 
 void	print_access_error(ftls_context *ctx, char *path);
@@ -36,7 +36,7 @@ void	print_path_error(ftls_context *ctx, const char *path, const char *msg);
 void	print_error(ftls_context *ctx, const char *str);
 void	print_errno(ftls_context *ctx);
 
-int		max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes);
+int		max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes, ftls_print_options ops);
 void	print_simple_name(ftls_context *ctx, ftls_file_info *file);
 char	*get_perms(ftls_file_info *file);
 

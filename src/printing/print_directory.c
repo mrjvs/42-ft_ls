@@ -32,12 +32,12 @@ void	print_directory(ftls_context *ctx, ftls_dir *dir, ftls_print_options ops) {
 	l_list *lst = &(dir->files);
 	if (!ctx->ops.show_long) {
 		int *sizes = NULL;
-		int columns = max_columns_for_files(ctx, dir, &sizes);
+		int columns = max_columns_for_files(ctx, dir, &sizes, ops);
 		if (columns == -1) {
 			print_directory_error(ctx, dir->name);
 			return;
 		}
-		print_grid(ctx, dir, columns, sizes);
+		print_grid(ctx, dir, columns, sizes, ops);
 		free(sizes);
 	} else {
 

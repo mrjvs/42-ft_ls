@@ -18,7 +18,7 @@ static int get_rows_for_grid(size_t dir_size, int columns) {
 /**
  * Get width for every column, taking in account every file
 */
-static void	get_sizing_for_rows(ftls_context *ctx, int *sizes, int columns, ftls_dir *dir, size_t dir_size, int *lowest) {
+static void	get_sizing_for_rows(ftls_context *ctx, int *sizes, int columns, ftls_dir *dir, size_t dir_size, int *lowest, ftls_print_options ops) {
 	int i = 0;
 	int j = 0;
 	int rows = get_rows_for_grid(dir_size, columns);
@@ -28,7 +28,7 @@ static void	get_sizing_for_rows(ftls_context *ctx, int *sizes, int columns, ftls
 		sizes[c] = 0;
 	while ((lst = get_next_list(lst))) {
 		struct s_ftls_dir_entry *entry = get_list_data(lst, struct s_ftls_dir_entry);
-		if (!should_print_file(ctx, &(entry->file)))
+		if ((entry->file.is_dir && !ops.display_full) || !should_print_file(ctx, &(entry->file)))
 			continue;
 		size_t len = ftls_strlen(entry->file.name);
 		if (sizes[j] < (int)len)
@@ -66,14 +66,14 @@ static t_bool check_if_fits(int *sizes, int columns, int columnChars) {
  * also outputs a list of sizes for each column (make sure to free)
  * returns -1 on error and the biggest possible column amount on success
 */
-int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes) {
+int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes, ftls_print_options ops) {
 	int currentCol = 1;
 	int columns = ctx->ops.columns;
 
 	size_t dir_size = 0;
 	l_list	*lst = &(dir->files);
 	while((lst = get_next_list(lst))) {
-		dir_size += should_print_file(ctx, &(get_list_data(lst, struct s_ftls_dir_entry)->file)) > 0;
+		dir_size += !(get_list_data(lst, struct s_ftls_dir_entry)->file.is_dir && !ops.display_full) && should_print_file(ctx, &(get_list_data(lst, struct s_ftls_dir_entry)->file));
 	}
 
 	// showing as rows or no columns found in terminal
@@ -81,7 +81,7 @@ int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes) {
 		int *cols = malloc(sizeof(int) * 1);
 		if (!cols)
 			return -1;
-		get_sizing_for_rows(ctx, cols, 1, dir, dir_size, 0);
+		get_sizing_for_rows(ctx, cols, 1, dir, dir_size, 0, ops);
 		*sizes = cols;
 		return 1;
 	}
@@ -93,11 +93,11 @@ int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes) {
 			return -1;
 		for (int i = 0; i < currentCol; i++)
 			cols[i] = 0;
-		get_sizing_for_rows(ctx, cols, currentCol, dir, dir_size, &lowest);
+		get_sizing_for_rows(ctx, cols, currentCol, dir, dir_size, &lowest, ops);
 		if (!check_if_fits(cols, lowest, columns)) {
 			if (currentCol == 1)
 				currentCol++;
-			get_sizing_for_rows(ctx, cols, currentCol-1, dir, dir_size, &lowest);
+			get_sizing_for_rows(ctx, cols, currentCol-1, dir, dir_size, &lowest, ops);
 			*sizes = cols;
 			return lowest;
 		} else if (dir_size == (size_t)currentCol) {
@@ -112,11 +112,11 @@ int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes) {
 /**
  * Print a grid of files
 */
-void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes) {
+void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes, ftls_print_options ops) {
 	size_t dir_size = 0;
 	l_list	*lst = &(dir->files);
 	while((lst = get_next_list(lst)))
-		dir_size += should_print_file(ctx, &(get_list_data(lst, struct s_ftls_dir_entry)->file)) > 0;
+		dir_size += !(get_list_data(lst, struct s_ftls_dir_entry)->file.is_dir && !ops.display_full) && should_print_file(ctx, &(get_list_data(lst, struct s_ftls_dir_entry)->file));
 	int rows = get_rows_for_grid(dir_size, columns);
 
 	// every row
@@ -130,7 +130,7 @@ void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes) {
 			for (int i = 0; i < to_skip && lst;) {
 				struct s_ftls_dir_entry *entry = get_list_data(lst, struct s_ftls_dir_entry);
 				lst = get_next_list(lst);
-				if (!should_print_file(ctx, &(entry->file))) {
+				if ((entry->file.is_dir && !ops.display_full) || !should_print_file(ctx, &(entry->file))) {
 					continue;
 				}
 				i++;
@@ -138,7 +138,7 @@ void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes) {
 			// skip until first printable
 			while (lst) {
 				struct s_ftls_dir_entry *entry = get_list_data(lst, struct s_ftls_dir_entry);
-				if (!should_print_file(ctx, &(entry->file)))
+				if ((entry->file.is_dir && !ops.display_full) || !should_print_file(ctx, &(entry->file)))
 					lst = get_next_list(lst);
 				else
 					break;

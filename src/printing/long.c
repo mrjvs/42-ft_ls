@@ -81,7 +81,6 @@ static t_bool	extract_timestamp(ftls_context *ctx, time_t tim, struct s_ftls_col
 	return true;
 }
 
-// TODO options
 /**
  * Get a long line and populate it into `line`.
  * returns false if failed to allocate memory
