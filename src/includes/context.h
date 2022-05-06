@@ -2,7 +2,6 @@
 # define FTLS_CONTEXT_H
 
 #include "bool.h"
-#include <bits/types/timer_t.h>
 #include <time.h>
 
 enum ftls_sort {
