@@ -36,10 +36,13 @@ static int	process_option(void *ctx_ptr, char option)
 
 static void	post_process_options(ftls_context *ctx)
 {
-	if (ctx->ops.show_long && ctx->ops.sort_method == FTLS_SORT_ACCESSED)
-		ctx->ops.show_access_date = true;
-	if (!ctx->ops.should_sort)
+	if (!ctx->ops.should_sort) {
 		ctx->ops.sort_method = FTLS_SORT_LEXICOGRAPHICAL;
+	} else {
+		ctx->ops.date_format = FTLS_MODIFIED_TIME;
+	}
+	if (ctx->ops.should_sort && ctx->ops.sort_method == FTLS_SORT_ACCESSED)
+		ctx->ops.date_format = FTLS_ACCESSED_TIME;
 	if (ctx->ops.disable_sort) {
 		ctx->ops.sort_method = FTLS_SORT_NONE;
 		ctx->ops.list_all = true;

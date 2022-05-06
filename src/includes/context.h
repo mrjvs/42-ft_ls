@@ -12,6 +12,12 @@ enum ftls_sort {
 	FTLS_SORT_ACCESSED,
 };
 
+enum ftls_date_format {
+	FTLS_CREATED_TIME,
+	FTLS_ACCESSED_TIME,
+	FTLS_MODIFIED_TIME,
+};
+
 enum e_ftls_color {
 	C_FILE = 0,
 	C_DIR = 1,
@@ -52,6 +58,7 @@ typedef struct s_ftls_options {
 	t_bool	show_access_date;		// show access date instead of modified date
 	t_bool	fetch_details;			// if it should fetch details
 	time_t	cur_time;
+	enum ftls_date_format date_format;
 }	ftls_options;
 
 typedef struct s_ftls_context {

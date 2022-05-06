@@ -120,7 +120,13 @@ static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_fi
 	l[4].right_align = true;
 	l[4].exists = true;
 
-	time_t time = file->stat.st_mtim.tv_sec;
+	time_t time = 0;
+	if (ctx->ops.date_format == FTLS_CREATED_TIME)
+		time = file->stat.st_ctim.tv_sec;
+	else if (ctx->ops.date_format == FTLS_ACCESSED_TIME)
+		time = file->stat.st_atim.tv_sec;
+	else if (ctx->ops.date_format == FTLS_MODIFIED_TIME)
+		time = file->stat.st_mtim.tv_sec;
 	char *timestr = ctime(&time);
 	if (!extract_timestamp(ctx, time, l, 5, timestr)) {
 		free_str_arr(l);

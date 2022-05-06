@@ -103,6 +103,7 @@ void		init_context(ftls_context *context)
 	ops->disable_sort = 0;
 	ops->should_sort = 0;
 	ops->sort_method = FTLS_SORT_MODIFIED;
+	ops->date_format = FTLS_CREATED_TIME;
 	ops->show_access_date = 0;
 	ops->fetch_details = 0;
 
