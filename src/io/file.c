@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <pwd.h>
 #include <grp.h>
-#include <linux/limits.h>
+#include <limits.h>
 #include <sys/xattr.h>
 
 #ifdef MACOS
