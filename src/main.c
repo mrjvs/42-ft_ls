@@ -1,4 +1,5 @@
 #include "context.h"
+#include "printing.h"
 #include "cli.h"
 #include <time.h>
 
@@ -10,7 +11,7 @@ int	main(int argc, char **argv, char **envp)
 	init_context(&ctx);
 	ctx.executable = argv[0];
 	if (time(&(ctx.ops.cur_time)) == (time_t)-1) {
-		// TODO print error;
+		print_errno(&ctx);
 		return 2;
 	}
 	handle_argv(argc, argv, &ctx);

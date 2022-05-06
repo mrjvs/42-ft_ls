@@ -10,7 +10,7 @@ Todo:
    - [X] Grid
    - [X] Long format
    - [X] @ if any xattr, + if ACL
-   - [ ] Timestamps (if older than 6 months, show year)
+   - [X] Timestamps (if older than 6 months, show year)
    - [ ] Fix janky grid
 
 Before turnin:

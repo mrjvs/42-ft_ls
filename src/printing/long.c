@@ -39,7 +39,6 @@ static char	*get_column_from_string(char *str, int col) {
 }
 
 static t_bool	extract_timestamp(ftls_context *ctx, time_t tim, struct s_ftls_col *lines, int i, char *timestr) {
-	(void)ctx; // TODO 6 months
 	lines[i].str = get_column_from_string(timestr, 1);
 	lines[i].exists = true;
 	if (!lines[i].str) {
