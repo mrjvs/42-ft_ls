@@ -9,7 +9,6 @@ Remaking the `ls` command from scratch.<br/>
  - dynamic column sizing (through ENV or terminal)
  - colorized output (through ENV or `-G`)
  - proper handling of ACL and extended attributes
- - another option: `--hi`
 
 ## functions used from standard library
  - memory functions: `malloc`, `free`
@@ -19,8 +18,9 @@ Remaking the `ls` command from scratch.<br/>
  - error functions: `strerror`
 
 ## features considered out of scope
- - other locales, only "en_US" is supported
+ - other locales, only c standard is supported
  - perfect `ls` sorting, only the alphabet and numbers are identically sorted
+ - device driver information
 
 ## Development setup
 Run the following to compile, this requires build-essentials to be installed.
