@@ -52,7 +52,6 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 			free(first_arg);
 			return true;
 		}
-		free(first_arg);
 	}
 
 	// treat as list of files and directories
@@ -69,6 +68,8 @@ t_bool	gather_and_print(ftls_context *ctx, int argc, char **argv)
 		print_options.display_full = true;
 	}
 	print_directory(ctx, &dir, print_options);
+	if (has_one_arg)
+		free(first_arg);
 	free_directory(&dir);
 	return true;
 }

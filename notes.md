@@ -17,7 +17,8 @@ Todo:
    - [X] implement `-d`
    - [X] implement `-g`
    - [X] Hangs on /tmp of cmake (except if `-a`)
-   - [ ] breaks on plain file and one argument
+   - [X] breaks on plain file and one argument
+   - [ ] Check leaks
 
 Before turnin:
  - [X] Compile with MAC_OS define
