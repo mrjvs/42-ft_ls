@@ -107,7 +107,7 @@ static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_fi
 	l[1].right_align = true;
 	l[1].exists = true;
 
-	l[2].str = ftls_strdup(file->user);
+	l[2].str = ftls_strdup(ctx->ops.only_show_group ? "" : file->user);
 	if (!l[2].str) { free_str_arr(l); return false; }
 	l[2].exists = true;
 
@@ -201,7 +201,7 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 
 			// padding
 			size_t padding = 0;
-			if (j != 0)
+			if (j != 0 && (column_sizes[j] > 0 || lines[i][j].name))
 				padding += 1;
 			if (lines[i][j].right_align)
 				padding += column_sizes[j] - size;

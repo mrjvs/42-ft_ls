@@ -14,9 +14,9 @@ Todo:
    - [X] Fix janky grid
  - [ ] Bugs
    - [ ] `-u` without sorting
-   - [ ] implement `-d`
-   - [ ] implement `-g`
-   - [ ] Hangs on /tmp of cmake (except if `-a`)
+   - [X] implement `-d`
+   - [X] implement `-g`
+   - [X] Hangs on /tmp of cmake (except if `-a`)
 
 Before turnin:
  - [ ] Compile with MAC_OS define
