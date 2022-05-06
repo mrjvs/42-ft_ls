@@ -4,6 +4,7 @@
 #include "io.h"
 #include "printing.h"
 #include <stdio.h>
+#include <time.h>
 #include <unistd.h>
 
 static void	free_str_arr(struct s_ftls_col *arr) {
@@ -12,18 +13,85 @@ static void	free_str_arr(struct s_ftls_col *arr) {
 	free(arr);
 }
 
-// TODO timestamps
+static char	*get_column_from_string(char *str, int col) {
+	int start = 0;
+	int col_count = 0;
+	int i = 0;
+	for (; str[i]; i++) {
+		if (str[i] == ' ') {
+			if (col_count == col) {
+				break;
+			}
+			while (str[i+1] == ' ')
+				i++;
+			start = i+1;
+			col_count++;
+		}
+	}
+	if (col_count != col) {
+		return NULL;
+	}
+	char tmp = str[i];
+	str[i] = '\0';
+	char *ret = ftls_strdup(str+start);
+	str[i] = tmp;
+	return ret;
+}
+
+static t_bool	extract_timestamp(ftls_context *ctx, time_t tim, struct s_ftls_col *lines, int i, char *timestr) {
+	(void)ctx; // TODO 6 months
+	lines[i].str = get_column_from_string(timestr, 1);
+	lines[i].exists = true;
+	if (!lines[i].str) {
+		return false;
+	}
+	lines[i+1].str = get_column_from_string(timestr, 2);
+	lines[i+1].exists = true;
+	lines[i+1].right_align = true;
+	if (!lines[i+1].str) {
+		return false;
+	}
+	// show year
+	if (ctx->ops.cur_time - tim >= FTLS_TIME_TO_SHOW_YEAR) {
+		lines[i+2].str = get_column_from_string(timestr, 4);
+		lines[i+2].exists = true;
+		lines[i+2].right_align = true;
+		if (!lines[i+2].str) {
+			return false;
+		}
+		lines[i+2].str[ftls_strlen(lines[i+2].str)-1] = '\0';
+	}
+	// else show time
+	else {
+		lines[i+2].str = get_column_from_string(timestr, 3);
+		lines[i+2].exists = true;
+		lines[i+2].right_align = true;
+		if (!lines[i+2].str) {
+			return false;
+		}
+		for (int ind = 0, j = 0; lines[i+2].str[ind]; ind++) {
+			if (lines[i+2].str[ind] == ':') {
+				j++;
+				if (j == 2) {
+					lines[i+2].str[ind] = '\0';
+					break;
+				}
+			}
+		}
+	}
+	return true;
+}
+
 // TODO options
 /**
  * Get a long line and populate it into `line`.
  * returns false if failed to allocate memory
 */
 static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_file_info *file) {
-	(void)ctx;
-	struct s_ftls_col *l = malloc(sizeof(struct s_ftls_col) * 7);
+	struct s_ftls_col *l = malloc(sizeof(struct s_ftls_col) * 10);
 	if (!l)
 		return false;
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 10; i++) {
 		l[i].name = false;
 		l[i].str = NULL;
 		l[i].exists = false;
@@ -53,10 +121,17 @@ static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_fi
 	l[4].right_align = true;
 	l[4].exists = true;
 
-	l[5].str = NULL;
-	l[5].name = true;
-	l[5].file = *file;
-	l[5].exists = true;
+	time_t time = file->stat.st_mtim.tv_sec;
+	char *timestr = ctime(&time);
+	if (!extract_timestamp(ctx, time, l, 5, timestr)) {
+		free_str_arr(l);
+		return false;
+	}
+
+	l[8].str = NULL;
+	l[8].name = true;
+	l[8].file = *file;
+	l[8].exists = true;
 
 	*line = l;
 	return true;
@@ -109,8 +184,8 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 	}
 
 	// fetch column sizes
-	int column_sizes[7];
-	for (int i = 0; i < 7; i++) {
+	int column_sizes[10];
+	for (int i = 0; i < 10; i++) {
 		column_sizes[i] = 0;
 		for (size_t j = 0; j < dir_size; j++) {
 			int size = (int)ftls_strlen(lines[j][i].str);

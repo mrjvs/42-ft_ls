@@ -2,6 +2,8 @@
 # define FTLS_CONTEXT_H
 
 #include "bool.h"
+#include <bits/types/timer_t.h>
+#include <time.h>
 
 enum ftls_sort {
 	FTLS_SORT_NONE,
@@ -49,6 +51,7 @@ typedef struct s_ftls_options {
 	t_bool	show_as_rows;			// if it should show with columns or every entry one row
 	t_bool	show_access_date;		// show access date instead of modified date
 	t_bool	fetch_details;			// if it should fetch details
+	time_t	cur_time;
 }	ftls_options;
 
 typedef struct s_ftls_context {

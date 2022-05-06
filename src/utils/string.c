@@ -1,6 +1,7 @@
 #include "ftls_string.h"
 #include "io.h"
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -13,6 +14,8 @@
 char	*ftls_strdup(const char *str)
 {
 	char *out = malloc(ftls_strlen(str) + 1);
+	if (!out)
+		return 0;
 	size_t i = 0;
 	for (; str[i]; i++)
 		out[i] = str[i];

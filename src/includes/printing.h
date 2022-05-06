@@ -6,6 +6,8 @@
 #include "io.h"
 #include <stddef.h>
 
+#define FTLS_TIME_TO_SHOW_YEAR 15780000
+
 typedef struct s_ftls_print_options {
 	t_bool	show_prefix;	// show prefix of directory
 	t_bool	display_full;	// show directories as well as files
