@@ -94,6 +94,7 @@ static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_fi
 		l[i].str = NULL;
 		l[i].exists = false;
 		l[i].right_align = false;
+		l[i].extra_padd = 0;
 	}
 
 	// gather strings
@@ -107,10 +108,12 @@ static t_bool	get_long_line(ftls_context *ctx, struct s_ftls_col **line, ftls_fi
 	l[1].exists = true;
 
 	l[2].str = ftls_strdup(ctx->ops.only_show_group ? "" : file->user);
+	l[2].extra_padd = 1;
 	if (!l[2].str) { free_str_arr(l); return false; }
 	l[2].exists = true;
 
 	l[3].str = ftls_strdup(file->group);
+	l[3].extra_padd = 1;
 	if (!l[3].str) { free_str_arr(l); return false; }
 	l[3].exists = true;
 
@@ -230,6 +233,8 @@ static t_bool	print_long_lines(ftls_context *ctx, ftls_dir *dir, ftls_print_opti
 			padding_after = 0;
 			if (!lines[i][j].right_align)
 				padding_after += column_sizes[j] - size;
+			if (size > 0 && lines[i][j].extra_padd > 0)
+				padding_after += lines[i][j].extra_padd;
 		}
 		ftls_write(STDOUT_FILENO, "\n");
 	}

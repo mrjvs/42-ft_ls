@@ -21,6 +21,7 @@ struct s_ftls_col {
 	t_bool			exists;
 	ftls_file_info	file;
 	t_bool			right_align;
+	char			extra_padd;
 	t_bool			name;
 };
 
