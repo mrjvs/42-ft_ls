@@ -3,7 +3,110 @@
 #include "io.h"
 #include "list.h"
 #include "printing.h"
+#include <stddef.h>
 #include <unistd.h>
+
+/**
+ * Check if column sizes fit in terminal columns. takes in account grid formatting
+ * returns true if it will fit, false if not
+*/
+static t_bool check_if_fits(int *sizes, int columns, int columnChars) {
+	int len = 0;
+	for (int i = 0; i < columns; i++)
+		len += sizes[i];
+	len += (columns-1) * 2; // 2 spaces inbetween items
+	if (len > columnChars)
+		return false;
+	return true;
+}
+
+// ------------- MACOS GRID CALCULATION -------------
+#ifdef MACOS_RENDER
+
+/**
+ * Get width for every column, taking in account every file
+*/
+static void	get_sizing_for_rows(ftls_context *ctx, int *sizes, int columns, ftls_dir *dir, ftls_print_options ops) {
+	l_list *lst = &(dir->files);
+	size_t largest_len = 0;
+	int i = 0;
+	while ((lst = get_next_list(lst))) {
+		struct s_ftls_dir_entry *entry = get_list_data(lst, struct s_ftls_dir_entry);
+		if ((entry->file.is_dir && !ops.display_full) || !should_print_file(ctx, &(entry->file)))
+			continue;
+		size_t len = ftls_strlen(entry->file.name);
+		if (largest_len < len)
+			largest_len = len;
+		i++;
+	}
+	for (int c = 0; c < columns; c++)
+		sizes[c] = largest_len;
+}
+
+static int get_cols_for_grid(size_t dir_size, int rows) {
+	return (dir_size / rows) + (dir_size % rows > 0);
+}
+
+static int get_rows_for_grid(size_t dir_size, int columns) {
+	// on macos render mode, this is the same result
+	return get_cols_for_grid(dir_size, columns);
+}
+
+/**
+ * Get the maximum columns for file list.
+ * also outputs a list of sizes for each column (make sure to free)
+ * returns -1 on error and the biggest possible column amount on success
+*/
+int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes, ftls_print_options ops) {
+	int columns = ctx->ops.columns;
+
+	size_t dir_size = 0;
+	l_list	*lst = &(dir->files);
+	size_t largest_len = 0;
+	while((lst = get_next_list(lst))) {
+		struct s_ftls_dir_entry *entry = get_list_data(lst, struct s_ftls_dir_entry);
+		if ((entry->file.is_dir && !ops.display_full) || !should_print_file(ctx, &(entry->file)))
+			continue;
+		dir_size++;
+		size_t len = ftls_strlen(entry->file.name);
+		if (largest_len < len)
+			largest_len = len;
+	}
+
+	// showing as rows or no columns found in terminal
+	if (dir_size == 0 || columns == 0 || ctx->ops.show_as_rows) {
+		int *cols = malloc(sizeof(int) * 1);
+		if (!cols)
+			return -1;
+		get_sizing_for_rows(ctx, cols, 1, dir, ops);
+		*sizes = cols;
+		return 1;
+	}
+
+	int amountRows = 1;
+	while (true) {
+		int currentCol = get_cols_for_grid(dir_size, amountRows);
+		int *cols = malloc(sizeof(int) * currentCol);
+		if (!cols)
+			return -1;
+		for (int i = 0; i < currentCol; i++)
+			cols[i] = 0;
+		get_sizing_for_rows(ctx, cols, currentCol, dir, ops);
+		if (amountRows <= (int)dir_size && !check_if_fits(cols, currentCol, columns)) {
+			// add a row and try again
+			amountRows++;
+			free(cols);
+			continue;
+		}
+
+		// it fits, return
+		*sizes = cols;
+		return currentCol;
+	}
+}
+
+// ------------- LINUX GRID CALCULATION -------------
+#else
 
 static int get_rows_for_grid(size_t dir_size, int columns) {
 	int count = 0;
@@ -45,20 +148,6 @@ static void	get_sizing_for_rows(ftls_context *ctx, int *sizes, int columns, ftls
 		lowestColumns = j+1;
 	if (lowest)
 		*lowest = lowestColumns;
-}
-
-/**
- * Check if column sizes fit in terminal columns. takes in account grid formatting
- * returns true if it will fit, false if not
-*/
-static t_bool check_if_fits(int *sizes, int columns, int columnChars) {
-	int len = 0;
-	for (int i = 0; i < columns; i++)
-		len += sizes[i];
-	len += (columns-1) * 2; // 2 spaces inbetween items
-	if (len > columnChars)
-		return false;
-	return true;
 }
 
 /**
@@ -108,6 +197,8 @@ int	max_columns_for_files(ftls_context *ctx, ftls_dir *dir, int **sizes, ftls_pr
 		currentCol++;
 	}
 }
+
+#endif
 
 /**
  * Print a grid of files
