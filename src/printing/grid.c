@@ -6,6 +6,12 @@
 #include <stddef.h>
 #include <unistd.h>
 
+#ifdef MACOS_RENDER
+# define COLUMN_SPACES 1
+#else
+# define COLUMN_SPACES 2
+#endif
+
 /**
  * Check if column sizes fit in terminal columns. takes in account grid formatting
  * returns true if it will fit, false if not
@@ -243,7 +249,7 @@ void	print_grid(ftls_context *ctx, ftls_dir *dir, int columns, int *sizes, ftls_
 			t_bool first = j == 0;
 			int amountOfSpaces = 0;
 			if (!first) {
-				amountOfSpaces += 2; // 2 spaces between entries
+				amountOfSpaces += COLUMN_SPACES; // spaces between entries
 				amountOfSpaces += prev_padd;
 			}
 			for (int i = 0; i < amountOfSpaces; i++)
