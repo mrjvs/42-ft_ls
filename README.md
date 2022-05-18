@@ -18,8 +18,6 @@ Remaking the `ls` command from scratch.<br/>
  - error functions: `strerror`
 
 ## features considered out of scope
- - other locales, only c standard is supported
- - perfect `ls` sorting, only the alphabet and numbers are identically sorted
  - device driver information
 
 ## Development setup

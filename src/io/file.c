@@ -117,7 +117,6 @@ t_bool retrieve_file_info(ftls_context *ctx, char *path, char *name, ftls_file_i
 	out->is_dotfile = false;
 	if (out->is_dir && name != NULL)
 		out->is_relative = ftls_strcmp(name, "..") == 0 || ftls_strcmp(name, ".") == 0;
-	out->has_sorting_priority = out->is_relative;
 	if (name != NULL)
 		out->is_dotfile = name[0] == '.';
 

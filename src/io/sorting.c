@@ -19,44 +19,6 @@ static int	compare_timespec(struct timespec a, struct timespec b) {
 }
 
 /**
- * simplified version of strcoll, only does alphabet and numbers
-*/
-static int	ftls_strcoll(char *a, char *b)
-{
-	static const char order[] = ".0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ";
-	int ind_a = -1;
-	int ind_b = -1;
-	int i = 0;
-
-	// loop until difference
-	while (a[i] == b[i] && a[i])
-		i++;
-	if (!a[i] && !b[i])
-		return 0; // no difference
-	
-	// find difference in (custom janky) collating order
-	char char_a = a[i];
-	char char_b = b[i];
-	for (i = 0; order[i]; i++) {
-		if (char_a == order[i])
-			ind_a = i;
-		if (char_b == order[i])
-			ind_b = i;
-		if (ind_b >= 0 && ind_a >= 0)
-			break;
-	}
-
-	if (ind_a == -1 && ind_b == -1)
-		return char_a - char_b; // standard number compare if both unknown symbols
-	// unknown symbols always get put on bottom
-	if (ind_b == -1)
-		return 1;
-	if (ind_a == -1)
-		return -1;
-	return ind_a - ind_b;
-}
-
-/**
  * sorting method. return greater than 0 if they are not in the right order
 */
 static int	compare_files(ftls_context *ctx, ftls_file_info *a, ftls_file_info *b)
@@ -65,21 +27,12 @@ static int	compare_files(ftls_context *ctx, ftls_file_info *a, ftls_file_info *b
 	if (ctx->ops.sort_method == FTLS_SORT_NONE)
 		return 0;
 
-	// priority sorting (relative directories)
-	if (a->has_sorting_priority || b->has_sorting_priority) {
-		if (a->has_sorting_priority && !b->has_sorting_priority)
-			return -1;
-		if (b->has_sorting_priority && !a->has_sorting_priority)
-			return 1;
-		return ftls_strcoll(a->name, b->name);
-	}
-	
 	if (ctx->ops.sort_method == FTLS_SORT_ACCESSED)
 		return compare_timespec(a->stat.st_atim, b->stat.st_atim);
 	if (ctx->ops.sort_method == FTLS_SORT_MODIFIED)
 		return compare_timespec(a->stat.st_mtim, b->stat.st_mtim);
-	// alphabetical sort (default)
-	return ftls_strcoll(a->name, b->name);
+	// ascii sort (default)
+	return ftls_strcmp(a->name, b->name);
 }
 
 /**
