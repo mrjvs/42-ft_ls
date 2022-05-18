@@ -16,10 +16,15 @@ void	print_path_error(ftls_context *ctx, const char *path, const char *msg)
 	int fd = STDERR_FILENO;
 	ftls_write(fd, ctx->executable);
 	ftls_write(fd, ": ");
+#ifdef MACOS
+	ftls_write(fd, path);
+	ftls_write(fd, ": ");
+#else
 	ftls_write(fd, msg);
 	ftls_write(fd, " '");
 	ftls_write(fd, path);
 	ftls_write(fd, "': ");
+#endif
 	ftls_puts(fd, strerror(errno));
 }
 
