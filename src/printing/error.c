@@ -16,7 +16,7 @@ void	print_path_error(ftls_context *ctx, const char *path, const char *msg)
 	int fd = STDERR_FILENO;
 	ftls_write(fd, ctx->executable);
 	ftls_write(fd, ": ");
-#ifdef MACOS
+#ifdef MACOS_RENDER
 	ftls_write(fd, path);
 	ftls_write(fd, ": ");
 #else
