@@ -74,6 +74,10 @@ char	*get_perms(ftls_file_info *file) {
 		out[i++] = '@';
 	else if (file->has_acl)
 		out[i++] = '+';
+#ifdef MACOS
+	else
+		out[i++] = ' ';
+#endif
 
 	out[i++] = 0;
 	return out;
